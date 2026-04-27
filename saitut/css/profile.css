@@ -1,0 +1,147 @@
+:root {
+    --glass: rgba(255, 255, 255, 0.2);
+    --water-shadow: inset 10px 10px 20px rgba(255,255,255,0.4), 
+                    inset -10px -10px 20px rgba(0,0,0,0.1),
+                    10px 20px 30px rgba(0,0,0,0.1);
+}
+
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    overflow-x: hidden;
+    background: linear-gradient(to bottom, #00aaff 0%, #80dfff 50%, #fff 100%);
+}
+
+.grass-floor {
+    position: fixed; bottom: 0; width: 100%; height: 10vh;
+    background: linear-gradient(to top, #1a4d1a, transparent);
+    z-index: -1;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    z-index: 10;
+}
+
+.water-drop {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 50px; 
+    padding: 30px;
+    border: 1px solid rgba(255,255,255,0.5);
+    box-shadow: var(--water-shadow);
+    color: #1a4d1a;
+    transition: transform 0.3s ease;
+}
+
+.water-drop:hover {
+    transform: translateY(-5px);
+}
+
+h1, h3 { margin-top: 0; color: #005580; }
+
+.profile-main-pic {
+    width: 120px; height: 120px;
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 70%; 
+    border: 4px solid white;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    object-fit: cover;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.3);
+    padding: 20px;
+    border-radius: 30px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: inset 5px 5px 10px rgba(255,255,255,0.5);
+}
+
+.quiz-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+.quiz-table th { padding: 10px; text-align: left; color: #005580; }
+.quiz-table td {
+    background: rgba(255,255,255,0.2);
+    padding: 15px;
+}
+.quiz-table tr td:first-child { border-radius: 20px 0 0 20px; }
+.quiz-table tr td:last-child { border-radius: 0 20px 20px 0; }
+
+.input-field {
+    width: 100%; padding: 12px 20px; margin: 8px 0;
+    border-radius: 25px; border: none;
+    background: rgba(255,255,255,0.5);
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+    outline: none;
+}
+
+.btn-update, .btn-add {
+    background: #00aaff;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 5px 15px rgba(0,170,255,0.3);
+}
+
+.btn-update:hover { background: #0088cc; }
+
+.friend-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(255,255,255,0.2);
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.unfriend-btn {
+    background: #ff4444; color: white; border: none;
+    padding: 5px 15px; border-radius: 15px; cursor: pointer;
+}
+
+.text-center { text-align: center; }
+.back-link { float: left; text-decoration: none; color: #005580; font-weight: bold; }
+.highlight-text { color: #ffaa00; }
+.mt-20 { margin-top: 20px; }
+.points-label { opacity: 0.7; text-transform: uppercase; }
+.points-value { margin: 5px 0; color: #ffaa00; font-size: 2.5rem; }
+.color-primary { color: #0088cc; font-size: 1.5rem; }
+.color-success { color: #28a745; font-size: 1.5rem; }
+.color-danger { color: #ff4444; font-size: 1.5rem; }
+.color-info { color: #00d2ff; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.table-responsive { overflow-x: auto; }
+.text-bold { font-weight: bold; }
+.pin-code { background: rgba(0,0,0,0.1); padding: 5px; border-radius: 8px; }
+.status-published { color: green; }
+.status-draft { color: orange; }
+.text-right { text-align: right; }
+.action-link { text-decoration: none; margin-right: 10px; }
+.action-link-disabled { opacity: 0.3; margin-right: 10px; }
+.action-link-edit { text-decoration: none; }
+.action-link-delete { text-decoration: none; margin-left: 10px; }
+.empty-table { text-align: center; opacity: 0.5; }
+.grid-2-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+.btn-outline { background: transparent; color: #00aaff; border: 2px solid #00aaff; }
+.btn-dark { background: #333; }
+.friend-pic { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
+.friend-name { color: #005580; font-weight: bold; }
