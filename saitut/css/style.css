@@ -90,8 +90,6 @@ body::before {
 }
 
 
-
-/*Inputs & Buttons (Ultra Clear Glass) */
 input {
     width: 100%;
     padding: 14px;
@@ -150,7 +148,7 @@ button:hover {
     color: #006400;
 }
 
-/* Friends & Notifications  */
+
 .notification-circle, .chat-circle {
     background: radial-gradient(circle at 30% 30%, #fff 0%, var(--aero-green) 100%) !important;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;

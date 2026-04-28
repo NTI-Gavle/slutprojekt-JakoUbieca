@@ -91,7 +91,7 @@ function displayQuestion() {
     questionText.innerText = q.question;
     answersList.innerHTML = "";
     
-    // MEDIA LOGIC
+    
     if (mediaContainer) {
         mediaContainer.innerHTML = "";                                  // Denna sektion bearbetar multimedieinnehållet i frågan dynamiskt: först kontrollerar den om URLadressen kommer från YouTube 
         if (q.media_url && q.media_url.trim() !== "" && q.media_url !== "null") {                  // för att integrera en videospelare, och om så inte är fallet försöker den ladda en standardvideo eller växlar automatiskt till en bild vid fel.
@@ -122,6 +122,7 @@ function displayQuestion() {
         }
     }
 
+    
     if (q.multiple_correct == 1) {
         q.answers.forEach(a => {
             const answerText = typeof a === "object" ? a.text : a;
@@ -160,7 +161,7 @@ function displayQuestion() {
     }
 }
 
-// MULTIPLAYER SYNC
+
 function sendPointsToLobby() {
     if (isMultiplayer && sessionId) {
         const formData = new FormData();
@@ -170,7 +171,7 @@ function sendPointsToLobby() {
     }
 }
 
-// ANSWER CHECKING 
+
 function checkSingleAnswer(selected, q) {
     if (quizFinished) return;
     clearInterval(timerInterval);

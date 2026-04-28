@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "../php/lang_config.php";
 include "../php/db.php";
 
 if (!isset($_SESSION['user_id'])) {
@@ -79,21 +80,22 @@ $q_stmt->close();
     </style>
 </head>
 <body>
+    <?php include "../php/lang_ui.php"; ?>
     <div class="maker-container">
-        <h1>✏️ Edit <span style="color:var(--accent);">Quiz</span></h1>
+        <h1>✏️ <?php echo htmlspecialchars($lang['edit_quiz_title']); ?></h1>
         
         <form id="quizForm" action="update_save.php" method="POST">
             <input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>">
 
             <div class="question-card" style="border-top: 4px solid var(--accent);">
-                <h3 style="margin-top:0; color: var(--accent);">📌 Basic Settings</h3>
+                <h3 style="margin-top:0; color: var(--accent);">📌 <?php echo htmlspecialchars($lang['settings']); ?></h3>
                 <div style="display: flex; gap: 20px;">
                     <div style="flex: 3;">
-                        <span class="label-text">Quiz Title:</span>
+                        <span class="label-text"><?php echo htmlspecialchars($lang['quiz_title_label']); ?></span>
                         <input type="text" name="quiz_title" value="<?php echo htmlspecialchars($quiz_data['title']); ?>" required>
                     </div>
                     <div style="flex: 1;">
-                        <span class="label-text">PIN:</span>
+                        <span class="label-text"><?php echo htmlspecialchars($lang['pin_label']); ?></span>
                         <input type="number" name="quiz_pin" value="<?php echo $quiz_data['pin']; ?>" required>
                     </div>
                 </div>
@@ -102,11 +104,11 @@ $q_stmt->close();
             <div id="questions-container"></div>
 
             <div style="display: flex; gap: 15px; margin-top: 20px;">
-                <button type="button" class="btn-add" onclick="addQuestion()">➕ Add Question</button>
-                <a href="../profile.php" style="text-decoration:none; color:white; padding:10px 20px; border:1px solid rgba(255,255,255,0.3); border-radius:50px; font-size: 0.9rem;">Cancel</a>
+                <button type="button" class="btn-add" onclick="addQuestion()"><?php echo htmlspecialchars($lang['add_question']); ?></button>
+                <a href="../profile.php" style="text-decoration:none; color:white; padding:10px 20px; border:1px solid rgba(255,255,255,0.3); border-radius:50px; font-size: 0.9rem;"><?php echo htmlspecialchars($lang['cancel']); ?></a>
             </div>
 
-            <button type="submit" class="btn-submit">💾 Save Changes</button>
+            <button type="submit" class="btn-submit"><?php echo htmlspecialchars($lang['save_changes']); ?></button>
         </form>
     </div>
 
@@ -128,44 +130,44 @@ $q_stmt->close();
             const qHtml = `
                 <div class="question-card" id="q-card-${questionCount}">
                     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin:0; color: var(--accent);">Question #${questionCount}</h3>
-                        <button type="button" class="btn-remove-q" onclick="removeQuestion(${questionCount})">Remove</button>
+                        <h3 style="margin:0; color: var(--accent);"><?php echo htmlspecialchars($lang['question_number']); ?>${questionCount}</h3>
+                        <button type="button" class="btn-remove-q" onclick="removeQuestion(${questionCount})"><?php echo htmlspecialchars($lang['remove_question']); ?></button>
                     </div>
                     
-                    <span class="label-text">Question Text:</span>
-                    <input type="text" name="questions[${questionCount}][text]" value="${qText}" placeholder="Write your question here..." required>
+                    <span class="label-text"><?php echo htmlspecialchars($lang['question_text_label']); ?></span>
+                    <input type="text" name="questions[${questionCount}][text]" value="${qText}" placeholder="<?php echo htmlspecialchars($lang['write_question_placeholder']); ?>" required>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                         <div>
-                            <span class="label-text">Type:</span>
+                            <span class="label-text"><?php echo htmlspecialchars($lang['question_type_label']); ?></span>
                             <select name="questions[${questionCount}][type]" onchange="toggleMedia(${questionCount}, this.value)">
-                                <option value="text" ${qType === 'text' ? 'selected' : ''}>📄 Text</option>
-                                <option value="media" ${qType === 'media' ? 'selected' : ''}>🖼️ Media</option>
+                                <option value="text" ${qType === 'text' ? 'selected' : ''}><?php echo htmlspecialchars($lang['text_type']); ?></option>
+                                <option value="media" ${qType === 'media' ? 'selected' : ''}><?php echo htmlspecialchars($lang['media_type']); ?></option>
                             </select>
                         </div>
                         <div>
-                            <span class="label-text">Time (sec.):</span>
+                            <span class="label-text"><?php echo htmlspecialchars($lang['time_for_answer']); ?></span>
                             <input type="number" name="questions[${questionCount}][timer]" value="${qTimer}" min="5">
                         </div>
                         <div style="display: flex; align-items: center; padding-top: 15px;">
                             <label style="display: flex; align-items: center; gap: 10px; cursor:pointer;">
                                 <input type="checkbox" name="questions[${questionCount}][is_multi]" ${isMulti}> 
-                                <span class="label-text" style="margin:0;">Multiple Correct</span>
+                                <span class="label-text" style="margin:0;"><?php echo htmlspecialchars($lang['multiple_choice']); ?></span>
                             </label>
                         </div>
                     </div>
 
                     <div id="media-box-${questionCount}" style="display:${displayMedia}; margin-top: 15px;">
-                        <span class="label-text">Media URL:</span>
+                        <span class="label-text"><?php echo htmlspecialchars($lang['link_to_media']); ?></span>
                         <input type="text" name="questions[${questionCount}][media_url]" value="${qMedia}">
                     </div>
                     
                     <div id="ans-cont-${questionCount}">
-                        <span class="label-text" style="margin-top: 25px; display:block;">Answer Options:</span>
+                        <span class="label-text" style="margin-top: 25px; display:block;"><?php echo htmlspecialchars($lang['answer_options_label']); ?></span>
                     </div>
                     
                     <button type="button" class="btn-add" onclick="addAnswer(${questionCount})" 
-                            style="margin-top: 15px; font-size: 0.8rem; padding: 8px 15px;">+ Add Answer</button>
+                            style="margin-top: 15px; font-size: 0.8rem; padding: 8px 15px;"><?php echo htmlspecialchars($lang['add_new_answer']); ?></button>
                 </div>`;
             
             container.insertAdjacentHTML('beforeend', qHtml);
@@ -188,7 +190,7 @@ $q_stmt->close();
                 <div class="answer-row" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                     <input type="checkbox" name="questions[${qId}][answers][${count}][correct]" ${isCorrect}>
                     <input type="text" name="questions[${qId}][answers][${count}][text]" 
-                           class="answer-text-input" value="${aText}" placeholder="Answer..." required>
+                           class="answer-text-input" value="${aText}" placeholder="<?php echo htmlspecialchars($lang['write_answer_placeholder']); ?>" required>
                     <button type="button" onclick="this.parentElement.remove()" class="btn-remove-small">&times;</button>
                 </div>`;
             cont.insertAdjacentHTML('beforeend', ansHtml);

@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "php/lang_config.php";
 include "php/db.php";
 
 if (!isset($_SESSION['user_id'])) {
@@ -36,45 +37,47 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
 </head>
 <body>
 
+    <?php include "php/lang_ui.php"; ?>
+
     <div class="grass-floor"></div>
 
     <div class="container">
         <div class="water-drop text-center">
-            <a href="dashboard.php" class="back-link">← Main Menu</a>
-            <h1>Profile <span class="highlight-text"><?php echo htmlspecialchars($username); ?></span></h1>
+            <a href="dashboard.php" class="back-link"><?php echo htmlspecialchars($lang['main_menu']); ?></a>
+            <h1><?php echo htmlspecialchars($lang['profile']); ?> <span class="highlight-text"><?php echo htmlspecialchars($username); ?></span></h1>
             
             <img id="current-profile-pic" src="<?php echo $display_pic; ?>" alt="Profile" class="profile-main-pic">
             
             <div class="mt-20">
-                <span class="points-label">Total Points</span>
+                <span class="points-label"><?php echo htmlspecialchars($lang['total_points']); ?></span>
                 <h2 class="points-value"><?php echo ($points ? $points : 0); ?> 🏆</h2>
             </div>
         </div>
 
         <div class="water-drop">
-            <h3 class="text-center">📊 Game Statistics</h3>
+            <h3 class="text-center"><?php echo htmlspecialchars($lang['game_statistics']); ?></h3>
             <div id="stats-container" class="stats-grid">
-                <div class="stat-card">🧠 Quizzes<br><span id="stat-quizzes" class="color-primary">0</span></div>
-                <div class="stat-card">✅ Correct<br><span id="stat-correct" class="color-success">0</span></div>
-                <div class="stat-card">❌ Incorrect<br><span id="stat-wrong" class="color-danger">0</span></div>
-                <div class="stat-card">🏅 Rank<br><span class="color-info">Expert</span></div>
+                <div class="stat-card"><?php echo htmlspecialchars($lang['quizzes_stat']); ?><br><span id="stat-quizzes" class="color-primary">0</span></div>
+                <div class="stat-card"><?php echo htmlspecialchars($lang['correct_stat']); ?><br><span id="stat-correct" class="color-success">0</span></div>
+                <div class="stat-card"><?php echo htmlspecialchars($lang['incorrect_stat']); ?><br><span id="stat-wrong" class="color-danger">0</span></div>
+                <div class="stat-card"><?php echo htmlspecialchars($lang['rank_stat']); ?><br><span class="color-info"><?php echo htmlspecialchars($lang['expert']); ?></span></div>
             </div>
         </div>
 
         <div class="water-drop">
             <div class="flex-between">
-                <h3>📂 My Quizzes</h3>
-                <a href="quiz_maker/create.php" class="btn-add">+ New Quiz</a>
+                <h3><?php echo htmlspecialchars($lang['my_quizzes']); ?></h3>
+                <a href="quiz_maker/create.php" class="btn-add"><?php echo htmlspecialchars($lang['new_quiz']); ?></a>
             </div>
             
             <div class="table-responsive">
                 <table class="quiz-table">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>PIN</th>
-                            <th>Status</th>
-                            <th class="text-right">Actions</th>
+                            <th><?php echo htmlspecialchars($lang['title']); ?></th>
+                            <th><?php echo htmlspecialchars($lang['pin']); ?></th>
+                            <th><?php echo htmlspecialchars($lang['status']); ?></th>
+                            <th class="text-right"><?php echo htmlspecialchars($lang['actions']); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,22 +87,22 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
                                     <td class="text-bold"><?php echo htmlspecialchars($q['title']); ?></td>
                                     <td><code class="pin-code"><?php echo $q['pin']; ?></code></td>
                                     <td>
-                                        <?php echo $q['is_published'] ? '<span class="status-published">● Published</span>' : '<span class="status-draft">● Draft</span>'; ?>
+                                        <?php echo $q['is_published'] ? '<span class="status-published">' . htmlspecialchars($lang['published']) . '</span>' : '<span class="status-draft">' . htmlspecialchars($lang['draft']) . '</span>'; ?>
                                     </td>
                                     <td class="text-right">
                                         <?php if (!$q['is_published']): ?>
-                                            <a href="php/publish_quiz.php?id=<?php echo $q['id']; ?>" title="Publish now" class="action-link">🚀</a>
+                                            <a href="php/publish_quiz.php?id=<?php echo $q['id']; ?>" title="<?php echo htmlspecialchars($lang['publish_now']); ?>" class="action-link">🚀</a>
                                         <?php else: ?>
-                                            <span class="action-link-disabled" title="Already published">🚀</span>
+                                            <span class="action-link-disabled" title="<?php echo htmlspecialchars($lang['already_published']); ?>">🚀</span>
                                         <?php endif; ?>
 
-                                        <a href="quiz_maker/edit.php?id=<?php echo $q['id']; ?>" class="action-link-edit" title="Edit">✏️</a>
-                                        <a href="php/delete_quiz.php?id=<?php echo $q['id']; ?>" onclick="return confirm('Delete?')" class="action-link-delete" title="Delete">🗑️</a>
+                                        <a href="quiz_maker/edit.php?id=<?php echo $q['id']; ?>" class="action-link-edit" title="<?php echo htmlspecialchars($lang['edit']); ?>">✏️</a>
+                                        <a href="php/delete_quiz.php?id=<?php echo $q['id']; ?>" onclick="return confirm('<?php echo htmlspecialchars($lang['delete_confirm']); ?>')" class="action-link-delete" title="<?php echo htmlspecialchars($lang['delete']); ?>">🗑️</a>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <tr><td colspan="4" class="empty-table">No quizzes available.</td></tr>
+                            <tr><td colspan="4" class="empty-table"><?php echo htmlspecialchars($lang['no_quizzes']); ?></td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -107,37 +110,37 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
         </div>
 
         <div class="water-drop">
-            <h3>👥 Friends (<span id="friendsCount">0</span>)</h3>
+            <h3><?php echo htmlspecialchars($lang['friends_list']); ?> (<span id="friendsCount">0</span>)</h3>
             <div id="myFriendsList"></div>
         </div>
 
         <div class="grid-2-col">
             <div class="water-drop">
-                <h3>🖼️ Avatar</h3>
+                <h3><?php echo htmlspecialchars($lang['avatar']); ?></h3>
                 <form id="profileUpdateForm">
-                    <input type="text" name="profile_url" placeholder="Image URL" class="input-field">
-                    <button type="submit" class="btn-update">Update</button>
+                    <input type="text" name="profile_url" placeholder="<?php echo htmlspecialchars($lang['image_url']); ?>" class="input-field">
+                    <button type="submit" class="btn-update"><?php echo htmlspecialchars($lang['update']); ?></button>
                 </form>
             </div>
 
             <div class="water-drop">
-                <h3>📧 Security</h3>
+                <h3><?php echo htmlspecialchars($lang['security']); ?></h3>
                 <form id="emailUpdateForm">
                     <input type="email" name="new_email" value="<?php echo htmlspecialchars($user_email); ?>" class="input-field" required>
-                    <input type="password" name="confirm_pass" placeholder="Password for confirmation" class="input-field" required>
-                    <button type="submit" class="btn-update btn-outline">Save Email</button>
+                    <input type="password" name="confirm_pass" placeholder="<?php echo htmlspecialchars($lang['password_confirm_placeholder']); ?>" class="input-field" required>
+                    <button type="submit" class="btn-update btn-outline"><?php echo htmlspecialchars($lang['save_email']); ?></button>
                 </form>
                 <p id="emailUpdateMessage"></p>
             </div>
         </div>
 
         <div class="water-drop">
-            <h3>🔐 Change Password</h3>
+            <h3><?php echo htmlspecialchars($lang['change_password']); ?></h3>
             <form id="changePasswordForm">
-                <input type="password" name="old_password" placeholder="Old password" required class="input-field">
-                <input type="password" id="new_password" name="new_password" placeholder="New password" required class="input-field">
-                <input type="password" id="confirm_password" placeholder="Confirm new password" required class="input-field">
-                <button type="submit" class="btn-update btn-dark">Update Password</button>
+                <input type="password" name="old_password" placeholder="<?php echo htmlspecialchars($lang['old_password']); ?>" required class="input-field">
+                <input type="password" id="new_password" name="new_password" placeholder="<?php echo htmlspecialchars($lang['new_password']); ?>" required class="input-field">
+                <input type="password" id="confirm_password" placeholder="<?php echo htmlspecialchars($lang['confirm_new_password']); ?>" required class="input-field">
+                <button type="submit" class="btn-update btn-dark"><?php echo htmlspecialchars($lang['update_password']); ?></button>
             </form>
             <p id="passwordMessage"></p>
         </div>
@@ -178,7 +181,7 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
         fetch('php/manage_friends.php?action=get_friends').then(res => res.json()).then(data => {
             const list = document.getElementById('myFriendsList');
             document.getElementById('friendsCount').innerText = data.length;
-            list.innerHTML = data.length ? "" : "<p>No friends.</p>";
+            list.innerHTML = data.length ? "" : "<p><?php echo htmlspecialchars($lang['no_friends']); ?></p>";
             data.forEach(f => {
                 const pic = f.profile_pic || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
                 list.innerHTML += `
@@ -187,14 +190,14 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
                             <img src="${pic}" class="friend-pic">
                             <span class="friend-name">${f.username}</span>
                         </div>
-                        <button class="unfriend-btn" onclick="unfriend(${f.friendship_id})">Remove</button>
+                        <button class="unfriend-btn" onclick="unfriend(${f.friendship_id})"><?php echo htmlspecialchars($lang['remove']); ?></button>
                     </div>`;
             });
         });
     }
 
     function unfriend(id) {
-        if (confirm("Remove friend?")) {
+        if (confirm("<?php echo htmlspecialchars($lang['remove_confirm']); ?>")) {
             fetch('php/manage_friends.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

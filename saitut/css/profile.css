@@ -118,6 +118,7 @@ h1, h3 { margin-top: 0; color: #005580; }
     padding: 5px 15px; border-radius: 15px; cursor: pointer;
 }
 
+/* Extracted Inline Styles */
 .text-center { text-align: center; }
 .back-link { float: left; text-decoration: none; color: #005580; font-weight: bold; }
 .highlight-text { color: #ffaa00; }

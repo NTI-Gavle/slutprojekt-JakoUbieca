@@ -7,6 +7,6 @@ $database = "quiz_db";
 $conn = new mysqli($host, $user, $password, $database);
 
 if ($conn->connect_error) {
-    die("Error connecting to the database!");
+    die("Error connecting to database!");
 }
 ?>

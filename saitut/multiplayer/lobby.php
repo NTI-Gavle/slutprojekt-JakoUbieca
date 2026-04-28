@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "../php/lang_config.php";
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login.php"); 
     exit;
@@ -16,12 +17,14 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body>
 
+<?php include "../php/lang_ui.php"; ?>
+
 <div class="sky-bg"></div>
 
 <div class="lobby-wrapper">
     <div class="header-nav">
-        <h1>⚔️ Мултиплейър <span class="accent-text">Lobby</span></h1>
-        <a href="../dashboard.php" class="back-link">← Back to lobby</a>
+        <h1>⚔️ <?php echo htmlspecialchars($lang['multiplayer_lobby']); ?></h1>
+        <a href="../dashboard.php" class="back-link"><?php echo htmlspecialchars($lang['main_menu']); ?></a>
     </div>
 
     <div class="main-layout">
@@ -53,7 +56,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
 
         <div class="glass-card" id="join-section">
-            <h2>Join</h2>
+            <h2><?php echo htmlspecialchars($lang['join']); ?></h2>
             <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 20px;">Enter the code and wait for approval.</p>
             
             <div style="display: flex; flex-direction: column; justify-content: center; flex-grow: 1;">

@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "php/lang_config.php";
 include "php/db.php"; 
 
 if (!isset($_SESSION['user_id'])) {
@@ -52,11 +53,13 @@ $quizzes_result = $stmt_q->get_result();
         <?php endfor; ?>
     </div>
 
+    <?php include "php/lang_ui.php"; ?>
+
     <div class="dashboard-container">
         
         <div class="tile tile-home" onclick="switchSection('main')">
             <span class="icon-lg">🏠</span>
-            <small>Home</small>
+            <small><?php echo htmlspecialchars($lang['home']); ?></small>
         </div>
 
         <div class="tile tile-user-profile" onclick="window.location='profile.php'">
@@ -66,27 +69,27 @@ $quizzes_result = $stmt_q->get_result();
 
         <div class="tile tile-chat" onclick="switchSection('chat')">
             <span>💬</span>
-            <small>Chat</small>
+            <small><?php echo htmlspecialchars($lang['chat']); ?></small>
         </div>
 
         <div class="tile tile-search" onclick="switchSection('user-search')">
             <span>🔍</span>
-            <small>SEARCH</small>
+            <small><?php echo htmlspecialchars($lang['search']); ?></small>
         </div>
 
         <div class="tile tile-leaderboard">
-            <h4 class="leaderboard-title">🏆 Top 10</h4>
+            <h4 class="leaderboard-title"><?php echo htmlspecialchars($lang['top_10']); ?></h4>
             <div id="leaderboard-list"></div>
         </div>
 
         <div class="tile tile-requests-small" onclick="switchSection('requests')">
             <span>📩</span>
-            <small>REQUESTS</small>
+            <small><?php echo htmlspecialchars($lang['requests']); ?></small>
         </div>
 
         <div class="tile tile-logout" onclick="window.location='logout.php'">
             <span>🚪</span>
-            <small>LOGOUT</small>
+            <small><?php echo htmlspecialchars($lang['logout']); ?></small>
         </div>
 
         <div class="tile tile-main" id="main-island">
@@ -94,50 +97,50 @@ $quizzes_result = $stmt_q->get_result();
             <div class="mode-selection-container">
                 <a href="multiplayer/lobby.php" class="mode-island">
                     <span class="icon-xl">⚔️</span>
-                    <b class="mode-title">MULTIPLAYER MODE</b>
+                    <b class="mode-title"><?php echo htmlspecialchars($lang['multiplayer_mode']); ?></b>
                 </a>
             </div>
 
             <div class="main-content-scrollable">
                 <div id="section-main" class="content-section active-section">
-                    <h1>🎮 Available Quizes</h1>
-                    <input type="text" id="quizSearch" class="quiz-search-bar" placeholder="Search quiz by title..." onkeyup="filterQuizzes()">
+                    <h1><?php echo htmlspecialchars($lang['available_quizzes']); ?></h1>
+                    <input type="text" id="quizSearch" class="quiz-search-bar" placeholder="<?php echo htmlspecialchars($lang['search_quiz_placeholder']); ?>" onkeyup="filterQuizzes()">
                     
                     <div id="quiz-list-container">
                         <?php while($quiz = $quizzes_result->fetch_assoc()): ?>
                         <div class="quiz-card quiz-card-styled">
                             <div>
                                 <b class="quiz-title quiz-title-styled"><?php echo htmlspecialchars($quiz['title']); ?></b>
-                                <small class="quiz-author">Author: <?php echo htmlspecialchars($quiz['author']); ?></small>
+                                <small class="quiz-author"><?php echo htmlspecialchars($lang['author']); ?> <?php echo htmlspecialchars($quiz['author']); ?></small>
                             </div>
-                            <a href="quiz.php?id=<?php echo (int)$quiz['id']; ?>" class="btn-play">PLAY</a>
+                            <a href="quiz.php?id=<?php echo (int)$quiz['id']; ?>" class="btn-play"><?php echo htmlspecialchars($lang['play']); ?></a>
                         </div>
                         <?php endwhile; ?>
                     </div>
                 </div>
 
                 <div id="section-user-search" class="content-section">
-                    <h1>🔍 Find Friends</h1>
-                    <input type="text" id="mainUserSearch" class="search-box-large" placeholder="Search by name...">
+                    <h1><?php echo htmlspecialchars($lang['find_friends']); ?></h1>
+                    <input type="text" id="mainUserSearch" class="search-box-large" placeholder="<?php echo htmlspecialchars($lang['search_name_placeholder']); ?>">
                     <div id="mainSearchResults" class="mt-20"></div>
                 </div>
 
                 <div id="section-chat" class="content-section">
-                    <h1>💬 Chat</h1>
+                    <h1><?php echo htmlspecialchars($lang['chat_title']); ?></h1>
                     <div class="chat-container">
                         <div id="chat-friends-list" class="chat-friends-list-styled">
-                            <p class="loading-text">Loading...</p>
+                            <p class="loading-text"><?php echo htmlspecialchars($lang['loading']); ?></p>
                         </div>
                         <div id="chat-window" class="chat-window-styled">
-                            <p class="empty-chat-msg">Choose a friend to start chatting.</p>
+                            <p class="empty-chat-msg"><?php echo htmlspecialchars($lang['choose_friend_chat']); ?></p>
                         </div>
                     </div>
                 </div>
 
                 <div id="section-requests" class="content-section">
-                    <h1>📩 Friend Requests</h1>
+                    <h1><?php echo htmlspecialchars($lang['friend_requests_title']); ?></h1>
                     <div id="friend-requests-list">
-                        <p>No new friend requests.</p>
+                        <p><?php echo htmlspecialchars($lang['no_new_requests']); ?></p>
                     </div>
                 </div>
             </div>
@@ -175,7 +178,7 @@ $quizzes_result = $stmt_q->get_result();
                     data.forEach((user, index) => {
                         const div = document.createElement('div');
                         div.className = 'leader-item';
-                        div.innerHTML = `<span>${index + 1}. ${document.createTextNode(user.username).textContent}</span><span>${user.points} pts</span>`;
+                        div.innerHTML = `<span>${index + 1}. ${document.createTextNode(user.username).textContent}</span><span>${user.points} <?php echo htmlspecialchars($lang['pts']); ?></span>`;
                         list.appendChild(div);
                     });
                 });
@@ -193,7 +196,7 @@ $quizzes_result = $stmt_q->get_result();
                         const div = document.createElement('div');
                         div.className = 'user-result-item';
                         div.innerHTML = `<span>${document.createTextNode(u.username).textContent}</span>
-                                         <button class="btn-friend" onclick="sendFriendRequest(${u.id})">Add</button>`;
+                                         <button class="btn-friend" onclick="sendFriendRequest(${u.id})"><?php echo htmlspecialchars($lang['add']); ?></button>`;
                         results.appendChild(div);
                     });
                 });
@@ -212,15 +215,15 @@ $quizzes_result = $stmt_q->get_result();
                 .then(res => res.json())
                 .then(data => {
                     const list = document.getElementById('friend-requests-list');
-                    if(data.length === 0) { list.innerHTML = '<p>Everything is reviewed!</p>'; return; }
+                    if(data.length === 0) { list.innerHTML = '<p><?php echo htmlspecialchars($lang['everything_reviewed']); ?></p>'; return; }
                     list.innerHTML = '';
                     data.forEach(req => {
                         const div = document.createElement('div');
                         div.className = 'user-result-item';
                         div.innerHTML = `<span>${document.createTextNode(req.username).textContent}</span>
                             <div>
-                                <button onclick="respondRequest(${req.request_id}, 'accept')" class="btn-friend btn-accept">Accept</button>
-                                <button onclick="respondRequest(${req.request_id}, 'decline')" class="btn-friend btn-decline">Decline</button>
+                                <button onclick="respondRequest(${req.request_id}, 'accept')" class="btn-friend btn-accept"><?php echo htmlspecialchars($lang['accept']); ?></button>
+                                <button onclick="respondRequest(${req.request_id}, 'decline')" class="btn-friend btn-decline"><?php echo htmlspecialchars($lang['decline']); ?></button>
                             </div>`;
                         list.appendChild(div);
                     });
@@ -240,7 +243,7 @@ $quizzes_result = $stmt_q->get_result();
                 .then(res => res.json())
                 .then(data => {
                     const list = document.getElementById('chat-friends-list');
-                    if (data.length === 0) { list.innerHTML = '<p class="empty-msg">You do not have any friends yet.</p>'; return; }
+                    if (data.length === 0) { list.innerHTML = '<p class="empty-msg"><?php echo htmlspecialchars($lang['no_friends_yet']); ?></p>'; return; }
                     list.innerHTML = '';
                     data.forEach(f => {
                         const div = document.createElement('div');
@@ -253,14 +256,14 @@ $quizzes_result = $stmt_q->get_result();
                 });
         }
 
-        function openChat(friendId, friendName) {           
+        function openChat(friendId, friendName) {                   
             currentChatId = friendId;
             const chatWindow = document.getElementById('chat-window');
             chatWindow.innerHTML = `
-                <h3 class="chat-header">Chat with ${document.createTextNode(friendName).textContent}</h3>
+                <h3 class="chat-header"><?php echo htmlspecialchars($lang['chat_with']); ?> ${document.createTextNode(friendName).textContent}</h3>
                 <div id="messages-container" class="messages-container-styled"></div>
                 <div class="chat-input-area">
-                    <input type="text" id="chatInput" class="search-box-large chat-input-styled" placeholder="Write a message..." onkeypress="if(event.key==='Enter') sendMessage()">
+                    <input type="text" id="chatInput" class="search-box-large chat-input-styled" placeholder="<?php echo htmlspecialchars($lang['write_message_placeholder']); ?>" onkeypress="if(event.key==='Enter') sendMessage()">
                     <button onclick="sendMessage()" class="btn-send">🚀</button>
                 </div>`;
             loadMessages();

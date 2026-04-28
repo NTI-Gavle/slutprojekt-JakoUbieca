@@ -15,7 +15,7 @@
         <h1>
            Freaky Quiz
         </h1>
-        <p>Become freaky!</p>
+        <p>Test your knowledge and become freaky!</p>
     </div>
 
     <div class="main-buttons">

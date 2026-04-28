@@ -5,11 +5,11 @@ include "../../php/db.php";
 header("Content-Type: application/json");
 
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(["success" => false, "message" => "You are not logged in"]);
+    echo json_encode(["success" => false, "message" => "You are not logged in!"]);
     exit;
 }
 
-$host_id = $_SESSION['user_id'];         // code generation based on user ID to ensure diferent lobbys for each server
+$host_id = $_SESSION['user_id'];
 $lobby_code = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 6)); 
 
 $stmt = $conn->prepare("INSERT INTO game_sessions (host_id, lobby_code, status) VALUES (?, ?, 'waiting')");

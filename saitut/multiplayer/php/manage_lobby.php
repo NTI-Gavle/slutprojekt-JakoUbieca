@@ -6,7 +6,6 @@ header("Content-Type: application/json");
 $user_id = $_SESSION['user_id'];
 $action = $_GET['action'] ?? '';
 
-
 if ($action === 'get_players') {
     $session_id = intval($_GET['session_id']);
     $stmt = $conn->prepare("
@@ -26,10 +25,8 @@ if ($action === 'get_players') {
     echo json_encode($players);
 }
 
-
 if ($action === 'join_lobby') {
     $code = $_GET['code'];
-    
     $stmt = $conn->prepare("SELECT id FROM game_sessions WHERE lobby_code = ? AND status = 'waiting'");
     $stmt->bind_param("s", $code);
     $stmt->execute();
@@ -42,7 +39,6 @@ if ($action === 'join_lobby') {
     
     $session = $res->fetch_assoc();
     $session_id = $session['id'];
-    
     $stmt = $conn->prepare("INSERT INTO lobby_players (session_id, user_id, status) VALUES (?, ?, 'pending')");
     $stmt->bind_param("ii", $session_id, $user_id);
     
@@ -68,6 +64,7 @@ if ($action === 'approve_player') {
     }
 }
 
+
 if ($action === 'check_my_status') {
     $session_id = intval($_GET['session_id']);
     $stmt = $conn->prepare("
@@ -88,9 +85,11 @@ if ($action === 'check_my_status') {
     exit;
 }
 
-if ($action === 'start_game') {                          //game start
+if ($action === 'start_game') {
     $session_id = intval($_GET['session_id']);
     $quiz_id = intval($_GET['quiz_id']);
+    
+
     $check = $conn->prepare("SELECT id FROM game_sessions WHERE id = ? AND host_id = ?");
     $check->bind_param("ii", $session_id, $user_id);
     $check->execute();

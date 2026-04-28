@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "../php/lang_config.php";
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login.php"); 
     exit;
@@ -91,19 +92,20 @@ if (!isset($_SESSION['user_id'])) {
                                                                         
 
 <body>
+    <?php include "../php/lang_ui.php"; ?>
     <div class="maker-container">
-        <h1>🎨 Quiz <span style="color:var(--accent);">Maker</span></h1>
+        <h1>🎨 <?php echo htmlspecialchars($lang['quiz_maker_title']); ?></h1>
         
         <form id="quizForm" action="save.php" method="POST">
             <div class="question-card" style="border-top: 4px solid var(--accent);">       
-                <h3 style="margin-top:0; color: var(--accent);">Settings</h3>            
+                <h3 style="margin-top:0; color: var(--accent);"><?php echo htmlspecialchars($lang['settings']); ?></h3>            
                 <div style="display: flex; gap: 20px;">
                     <div style="flex: 3;">
-                        <span class="label-text">Quiz Title:</span>
-                        <input type="text" name="quiz_title" placeholder="Enter quiz title here..." required>
+                        <span class="label-text"><?php echo htmlspecialchars($lang['quiz_title_label']); ?></span>
+                        <input type="text" name="quiz_title" placeholder="<?php echo htmlspecialchars($lang['quiz_title_placeholder']); ?>" required>
                     </div>
                     <div style="flex: 1;">
-                        <span class="label-text">Pin (4 numbers):</span>
+                        <span class="label-text"><?php echo htmlspecialchars($lang['pin_label']); ?></span>
                         <input type="number" name="quiz_pin" placeholder="1234" required>
                     </div>
                 </div>
@@ -112,11 +114,11 @@ if (!isset($_SESSION['user_id'])) {
             <div id="questions-container"></div>
 
             <div style="display: flex; gap: 15px; margin-top: 20px;">
-                <button type="button" class="btn-add" onclick="addQuestion()">➕ Add Question</button>
-                <a href="../dashboard.php" style="text-decoration:none; color:black; padding:10px 20px; border:1px solid rgba(255,255,255,0.3); border-radius:50px; font-size: 0.9rem;">Cancel</a>
+                <button type="button" class="btn-add" onclick="addQuestion()"><?php echo htmlspecialchars($lang['add_question']); ?></button>
+                <a href="../dashboard.php" style="text-decoration:none; color:black; padding:10px 20px; border:1px solid rgba(255,255,255,0.3); border-radius:50px; font-size: 0.9rem;"><?php echo htmlspecialchars($lang['cancel']); ?></a>
             </div>
 
-            <button type="submit" class="btn-submit">💾 Save and Publish Quiz</button>
+            <button type="submit" class="btn-submit"><?php echo htmlspecialchars($lang['save_quiz']); ?></button>
         </form>
     </div>
 
@@ -130,44 +132,44 @@ if (!isset($_SESSION['user_id'])) {
             const qHtml = `
                 <div class="question-card" id="q-card-${questionCount}">
                     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin:0; color: var(--accent);">Question #${questionCount}</h3>
-                        <button type="button" class="btn-remove-q" onclick="removeQuestion(${questionCount})">Remove Question</button>
+                        <h3 style="margin:0; color: var(--accent);"><?php echo htmlspecialchars($lang['question_number']); ?>${questionCount}</h3>
+                        <button type="button" class="btn-remove-q" onclick="removeQuestion(${questionCount})"><?php echo htmlspecialchars($lang['remove_question']); ?></button>
                     </div>
                     
-                    <span class="label-text">Question Text:</span>
-                    <input type="text" name="questions[${questionCount}][text]" placeholder="Write your question here..." required>
+                    <span class="label-text"><?php echo htmlspecialchars($lang['question_text_label']); ?></span>
+                    <input type="text" name="questions[${questionCount}][text]" placeholder="<?php echo htmlspecialchars($lang['write_question_placeholder']); ?>" required>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                         <div>
-                            <span class="label-text">Question Type:</span>
+                            <span class="label-text"><?php echo htmlspecialchars($lang['question_type_label']); ?></span>
                             <select name="questions[${questionCount}][type]" onchange="toggleMedia(${questionCount}, this.value)">
-                                <option value="text">📄 Text</option>
-                                <option value="media">🖼️ Media (Image/Video)</option>
+                                <option value="text"><?php echo htmlspecialchars($lang['text_type']); ?></option>
+                                <option value="media"><?php echo htmlspecialchars($lang['media_type']); ?></option>
                             </select>
                         </div>
                         <div>
-                            <span class="label-text">Time for answer (sec.):</span>
-                            <input type="number" name="questions[${questionCount}][timer]" value="30" min="5" max="300" placeholder="Example: 30">
+                            <span class="label-text"><?php echo htmlspecialchars($lang['time_for_answer']); ?></span>
+                            <input type="number" name="questions[${questionCount}][timer]" value="30" min="5" max="300" placeholder="<?php echo htmlspecialchars($lang['example_30']); ?>">
                         </div>
                         <div style="display: flex; align-items: center; padding-top: 15px;">
                             <label style="display: flex; align-items: center; gap: 10px; cursor:pointer;">
                                 <input type="checkbox" name="questions[${questionCount}][is_multi]" style="width:20px; height:20px;"> 
-                                <span class="label-text" style="margin:0;">Multiple Choice</span>
+                                <span class="label-text" style="margin:0;"><?php echo htmlspecialchars($lang['multiple_choice']); ?></span>
                             </label>
                         </div>
                     </div>
 
                     <div id="media-box-${questionCount}" style="display:none; margin-top: 15px;">
-                        <span class="label-text">Link to media (YouTube link or image URL):</span>
-                        <input type="text" name="questions[${questionCount}][media_url]" placeholder="Paste the link here...">
+                        <span class="label-text"><?php echo htmlspecialchars($lang['link_to_media']); ?></span>
+                        <input type="text" name="questions[${questionCount}][media_url]" placeholder="<?php echo htmlspecialchars($lang['paste_link_placeholder']); ?>">
                     </div>
                     
                     <div id="ans-cont-${questionCount}">
-                        <span class="label-text" style="margin-top: 25px; display:block;">Answer Options (mark the correct ones):</span>
+                        <span class="label-text" style="margin-top: 25px; display:block;"><?php echo htmlspecialchars($lang['answer_options_label']); ?></span>
                     </div>
                     
                     <button type="button" class="btn-add" onclick="addAnswer(${questionCount})" 
-                            style="margin-top: 15px; font-size: 0.8rem; padding: 8px 15px;">+ Add New Answer</button>
+                            style="margin-top: 15px; font-size: 0.8rem; padding: 8px 15px;"><?php echo htmlspecialchars($lang['add_new_answer']); ?></button>
                 </div>`;
             
             container.insertAdjacentHTML('beforeend', qHtml);
@@ -183,7 +185,7 @@ if (!isset($_SESSION['user_id'])) {
                 <div class="answer-row" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                     <input type="checkbox" name="questions[${qId}][answers][${count}][correct]" title="Mark as correct">
                     <input type="text" name="questions[${qId}][answers][${count}][text]" 
-                           class="answer-text-input" placeholder="Write answer here..." required>
+                           class="answer-text-input" placeholder="<?php echo htmlspecialchars($lang['write_answer_placeholder']); ?>" required>
                     <button type="button" onclick="this.parentElement.remove()" class="btn-remove-small" title="Remove answer">&times;</button>
                 </div>`;
                 
