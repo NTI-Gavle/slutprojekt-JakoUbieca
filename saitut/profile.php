@@ -10,10 +10,10 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-$stmt = $conn->prepare("SELECT profile_pic, points, email, username FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT profile_pic, points, email, username, is_admin FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$stmt->bind_result($profile_pic, $points, $user_email, $username);
+$stmt->bind_result($profile_pic, $points, $user_email, $username, $is_admin);
 $stmt->fetch();
 $stmt->close();
 
@@ -48,6 +48,12 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
             
             <img id="current-profile-pic" src="<?php echo $display_pic; ?>" alt="Profile" class="profile-main-pic">
             
+            <?php if ($is_admin == 1): ?>
+            <div style="margin-top: 15px;">
+                <a href="admin/panel.php" class="btn-admin" style="background: #ff4757; color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4); display: inline-block;">🛠️ Admin Panel</a>
+            </div>
+            <?php endif; ?>
+
             <div class="mt-20">
                 <span class="points-label"><?php echo htmlspecialchars($lang['total_points']); ?></span>
                 <h2 class="points-value"><?php echo ($points ? $points : 0); ?> 🏆</h2>
