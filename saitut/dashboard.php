@@ -54,6 +54,7 @@ $quizzes_result = $stmt_q->get_result();
     </div>
 
     <?php include "php/lang_ui.php"; ?>
+    <?php include "Rapport/ui.php"; ?>
 
     <div class="dashboard-container">
         

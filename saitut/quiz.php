@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "php/lang_config.php";
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
@@ -17,6 +18,9 @@ $quiz_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
     <link rel="stylesheet" href="css/quiz.css">
 </head>
 <body class="quiz-page">
+
+<?php include "php/lang_ui.php"; ?>
+<?php include "Rapport/ui.php"; ?>
 
 <div class="container main-quiz-island" id="quiz-container">
 

@@ -25,3 +25,8 @@ function deleteQuiz(quizId) {
             });
     }
 }
+
+function openAdminChat(reportId) {
+    document.getElementById('rapportPopup').style.display = 'flex';
+    openChatView(reportId);
+}

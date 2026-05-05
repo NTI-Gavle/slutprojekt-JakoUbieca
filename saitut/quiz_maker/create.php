@@ -93,6 +93,7 @@ if (!isset($_SESSION['user_id'])) {
 
 <body>
     <?php include "../php/lang_ui.php"; ?>
+    <?php include "../Rapport/ui.php"; ?>
     <div class="maker-container">
         <h1>🎨 <?php echo htmlspecialchars($lang['quiz_maker_title']); ?></h1>
         

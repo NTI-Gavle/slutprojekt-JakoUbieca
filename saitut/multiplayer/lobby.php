@@ -18,6 +18,7 @@ if (!isset($_SESSION['user_id'])) {
 <body>
 
 <?php include "../php/lang_ui.php"; ?>
+<?php include "../Rapport/ui.php"; ?>
 
 <div class="sky-bg"></div>
 

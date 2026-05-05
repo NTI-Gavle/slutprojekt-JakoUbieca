@@ -32,6 +32,12 @@ $res_q = $conn->query("SELECT q.id, q.title, q.is_published, u.username FROM qui
 while ($row = $res_q->fetch_assoc()) {
     $quizzes[] = $row;
 }
+
+$reports = [];
+$res_r = $conn->query("SELECT r.id, r.title, r.description, r.status, r.created_at, u.username FROM reports r JOIN users u ON r.user_id = u.id ORDER BY r.status ASC, r.id DESC");
+while ($row = $res_r->fetch_assoc()) {
+    $reports[] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,6 +50,7 @@ while ($row = $res_q->fetch_assoc()) {
     <link rel="stylesheet" href="../css/admin.css">
 </head>
 <body>
+    <?php include "../Rapport/ui.php"; ?>
     <div class="sky-bg"></div>
 
     <div class="admin-container">
@@ -106,6 +113,44 @@ while ($row = $res_q->fetch_assoc()) {
                         <td><?php echo $q['is_published'] ? 'Published' : 'Draft'; ?></td>
                         <td>
                             <a href="#" class="btn-danger" onclick="deleteQuiz(<?php echo $q['id']; ?>)">Delete</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>🚨 User Reports</h3>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($reports as $r): ?>
+                    <tr>
+                        <td><?php echo $r['id']; ?></td>
+                        <td><?php echo htmlspecialchars($r['username']); ?></td>
+                        <td><?php echo htmlspecialchars($r['title']); ?></td>
+                        <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<?php echo htmlspecialchars($r['description']); ?>">
+                            <?php echo htmlspecialchars($r['description']); ?>
+                        </td>
+                        <td>
+                            <?php if ($r['status'] == 'pending'): ?>
+                                <span style="color:#ffcc00; font-weight:bold;">Pending</span>
+                            <?php else: ?>
+                                <span style="color:#76c900; font-weight:bold;">Resolved</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <a href="#" class="btn-danger" style="background: #00d2ff; border-color: #00d2ff; color: white;" onclick="openAdminChat(<?php echo $r['id']; ?>)">View / Chat</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>

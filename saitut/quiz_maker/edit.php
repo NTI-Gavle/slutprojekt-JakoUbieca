@@ -81,6 +81,7 @@ $q_stmt->close();
 </head>
 <body>
     <?php include "../php/lang_ui.php"; ?>
+    <?php include "../Rapport/ui.php"; ?>
     <div class="maker-container">
         <h1>✏️ <?php echo htmlspecialchars($lang['edit_quiz_title']); ?></h1>
         

@@ -38,6 +38,7 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
 <body>
 
     <?php include "php/lang_ui.php"; ?>
+    <?php include "Rapport/ui.php"; ?>
 
     <div class="grass-floor"></div>
 
