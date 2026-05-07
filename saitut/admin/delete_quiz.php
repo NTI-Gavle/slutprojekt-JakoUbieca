@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "../php/db.php";
+include "../php/logger.php";
 
 if (!isset($_SESSION['user_id'])) {
     die("Not logged in");
@@ -26,7 +27,17 @@ if ($is_admin != 1) {
 
 $del = $conn->prepare("DELETE FROM quizzes WHERE id = ?");
 $del->bind_param("i", $target_id);
+
+$qstmt = $conn->prepare("SELECT title FROM quizzes WHERE id = ?");
+$qstmt->bind_param("i", $target_id);
+$qstmt->execute();
+$qres = $qstmt->get_result();
+$qrow = $qres->fetch_assoc();
+$quiz_title = $qrow ? $qrow['title'] : 'Unknown Quiz';
+$qstmt->close();
+
 if ($del->execute()) {
+    addSystemLog($conn, $user_id, "Deleted quiz: " . $quiz_title);
     echo "success";
 } else {
     echo "error";

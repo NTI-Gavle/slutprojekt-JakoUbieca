@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "../php/db.php";
+include "../php/logger.php";
 
 header('Content-Type: application/json');
 
@@ -55,6 +56,8 @@ $upd = $conn->prepare("UPDATE reports SET status = 'resolved' WHERE id = ?");   
 $upd->bind_param("i", $report_id);
 $upd->execute();
 $upd->close();
+
+addSystemLog($conn, $admin_id, "Resolved a report: " . $report_title);
 
 echo json_encode(['success' => true]);
 ?>

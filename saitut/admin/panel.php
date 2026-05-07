@@ -38,6 +38,17 @@ $res_r = $conn->query("SELECT r.id, r.title, r.description, r.status, r.created_
 while ($row = $res_r->fetch_assoc()) {
     $reports[] = $row;
 }
+
+$logs = [];
+try {
+    $res_l = $conn->query("SELECT * FROM system_logs ORDER BY id DESC LIMIT 100");
+    if ($res_l) {
+        while ($row = $res_l->fetch_assoc()) {
+            $logs[] = $row;
+        }
+    }
+} catch (Exception $e) {
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -156,6 +167,21 @@ while ($row = $res_r->fetch_assoc()) {
                     <?php endforeach; ?>
                 </tbody>
             </table>
+        </div>
+
+        <h3>Website Logs</h3>
+        <div class="console-logs" style="background: #000000 !important; border: 2px solid #333 !important; border-radius: 10px !important; padding: 15px !important; margin-bottom: 30px !important; font-family: 'Courier New', Courier, monospace !important; color: #00ff00 !important; max-height: 250px !important; overflow-y: auto !important; box-shadow: inset 0 0 10px rgba(0,0,0,0.8) !important;">
+            <?php if (empty($logs)): ?>
+                <div class="log-entry" style="color: #00ff00 !important; font-size: 1rem !important; margin-bottom: 5px !important;">> No system logs found.</div>
+            <?php else: ?>
+                <?php foreach ($logs as $l): ?>
+                    <div class="log-entry" style="color: #00ff00 !important; font-size: 1rem !important; margin-bottom: 5px !important; word-wrap: break-word !important;">
+                        <span class="log-time" style="color: #888 !important;">[<?php echo date('Y-m-d H:i:s', strtotime($l['created_at'])); ?>]</span> 
+                        <span class="log-user" style="color: #00d2ff !important; font-weight: bold !important;"><?php echo htmlspecialchars($l['username']); ?></span>: 
+                        <span class="log-action" style="color: #00ff00 !important;"><?php echo htmlspecialchars($l['action']); ?></span>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 

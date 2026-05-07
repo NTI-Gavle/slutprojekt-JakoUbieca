@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "../php/db.php";
+include "../php/logger.php";
 
 if (!isset($_SESSION['user_id'])) {
     die("Not logged in");
@@ -30,7 +31,16 @@ if ($user_id == $target_id) {
 
 $del = $conn->prepare("DELETE FROM users WHERE id = ?");
 $del->bind_param("i", $target_id);
+$tstmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
+$tstmt->bind_param("i", $target_id);
+$tstmt->execute();
+$tres = $tstmt->get_result();
+$trow = $tres->fetch_assoc();
+$target_username = $trow ? $trow['username'] : 'Unknown User';
+$tstmt->close();
+
 if ($del->execute()) {
+    addSystemLog($conn, $user_id, "Deleted user: " . $target_username);
     echo "success";
 } else {
     echo "error";

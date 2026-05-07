@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "db.php";
+include "logger.php";
 
 $username = $_POST['username'];
 $password = $_POST['password'];

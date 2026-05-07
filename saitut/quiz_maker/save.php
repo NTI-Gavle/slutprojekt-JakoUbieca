@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "../php/db.php"; 
+include "../php/logger.php"; 
 
 if (!isset($_SESSION['user_id'])) {
     die("No access.");
@@ -64,8 +65,8 @@ try {
         }
     }
 
-   
     $conn->commit();
+    addSystemLog($conn, $user_id, "Created quiz: " . $title);
     header("Location: ../profile.php?status=created");
     exit;
 

@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "db.php";
+include "logger.php";
 
 header('Content-Type: application/json');
 
@@ -69,6 +70,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    if ($response['success']) {
+        addSystemLog($conn, $user_id, "Updated their profile");
+    }
     
     echo json_encode($response);
     exit;

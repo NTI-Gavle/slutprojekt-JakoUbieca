@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "../php/db.php";
+include "../php/logger.php";
 
 if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ../login.php");
@@ -87,6 +88,7 @@ try {
     }
 
     $conn->commit();
+    addSystemLog($conn, $user_id, "Updated quiz: " . $quiz_title);
     header("Location: ../profile.php?update=success");
 
 } catch (Exception $e) {

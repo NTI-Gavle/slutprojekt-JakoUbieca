@@ -68,3 +68,44 @@
     background: #ff4757;
     color: white;
 }
+
+.console-logs {
+    background: #0d0d0d;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 30px;
+    font-family: 'Courier New', Courier, monospace;
+    color: #00ff00;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.console-logs::-webkit-scrollbar {
+    width: 8px;
+}
+
+.console-logs::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 0, 0.3);
+    border-radius: 4px;
+}
+
+.log-entry {
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+    word-wrap: break-word;
+}
+
+.log-time {
+    color: #888;
+}
+
+.log-user {
+    color: #00d2ff;
+    font-weight: bold;
+}
+
+.log-action {
+    color: #00ff00;
+}

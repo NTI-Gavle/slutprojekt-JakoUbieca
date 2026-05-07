@@ -1,5 +1,6 @@
 <?php
 include "db.php";
+include "logger.php";
 
 $username = $_POST['username'];
 $email = $_POST['email']; 
@@ -23,6 +24,8 @@ $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?,
 $stmt->bind_param("sss", $username, $email, $hashedPassword);
 
 if ($stmt->execute()) {
+    $new_user_id = $conn->insert_id;
+    addSystemLog($conn, $new_user_id, "Registered a new account");
     header("Location: ../login.php");
     exit;
 } else {

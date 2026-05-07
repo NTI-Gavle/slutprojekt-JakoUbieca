@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "../php/db.php";
+include "../php/logger.php";
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
@@ -24,6 +25,16 @@ if ($row['user_id'] == $user_id || $row['is_admin'] == 1) {
     $upd = $conn->prepare("UPDATE reports SET status = 'resolved' WHERE id = ?");
     $upd->bind_param("i", $report_id);
     $upd->execute();
+    
+    $rstmt = $conn->prepare("SELECT title FROM reports WHERE id = ?");   //log
+    $rstmt->bind_param("i", $report_id);
+    $rstmt->execute();
+    $rres = $rstmt->get_result();
+    $rrow = $rres->fetch_assoc();
+    $report_title = $rrow ? $rrow['title'] : 'Unknown Report';
+    $rstmt->close();
+    
+    addSystemLog($conn, $user_id, "Closed report: " . $report_title);
     echo json_encode(['success' => true]);
 } else {
     echo json_encode(['success' => false]);

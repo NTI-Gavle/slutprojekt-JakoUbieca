@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "db.php";
+include "logger.php";
 
 header("Content-Type: application/json");
 
