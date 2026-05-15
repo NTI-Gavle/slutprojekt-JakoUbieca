@@ -24,8 +24,11 @@
             </div>
 
             <div style="margin-bottom: 25px;">
-                <input type="password" name="password" placeholder="Password" required class="auth-input" 
+                <input type="password" name="password" id="register_password" placeholder="Password" required class="auth-input" 
                        style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white;">
+                <div class="glass-tube" id="password-strength-tube" style="margin-top: 10px; margin-bottom: 0;">
+                    <div class="wave-fluid" id="password-strength-wave"></div>
+                </div>
             </div>
 
             <button type="submit" class="auth-button confirm-btn" style="width: 100%; padding: 15px; cursor: pointer;">Register</button>
@@ -39,5 +42,45 @@
     </div>
 
     <script src="js/effects.js"></script>
+    <script>
+        const passwordInput = document.getElementById('register_password');   //funcktion for password strength 
+        const glassTube = document.getElementById('password-strength-tube');
+        const waveFluid = document.getElementById('password-strength-wave');
+
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                const val = this.value;
+                if (val.length === 0) {
+                    glassTube.style.display = 'none'; // hide the bar 
+                    return;
+                }
+                glassTube.style.display = 'block';
+
+                let strength = 0;
+                if (val.length >= 6) strength += 20;    // strength criteria 
+                if (val.length >= 10) strength += 20; 
+                if (/[A-Z]/.test(val)) strength += 20; 
+                if (/[0-9]/.test(val)) strength += 20; 
+                if (/[^A-Za-z0-9]/.test(val)) strength += 20; 
+
+                let color = '#ff4757'; 
+                let shadow = 'rgba(255, 71, 87, 0.6)';
+                
+                if (strength > 40 && strength <= 60) {
+                    color = '#ffa502'; 
+                    shadow = 'rgba(255, 165, 2, 0.6)';
+                } else if (strength > 60 && strength <= 80) {
+                    color = '#2ed573';
+                    shadow = 'rgba(46, 213, 115, 0.6)';
+                } else if (strength > 80) {
+                    color = '#1e90ff';
+                    shadow = 'rgba(30, 144, 255, 0.6)';
+                }
+                waveFluid.style.width = strength + '%';
+                waveFluid.style.backgroundColor = color;
+                waveFluid.style.boxShadow = `0 0 10px ${shadow}`;
+            });
+        }
+    </script>
 </body>
 </html>

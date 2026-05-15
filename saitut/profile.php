@@ -33,7 +33,7 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/profile.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -146,6 +146,12 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
             <form id="changePasswordForm">
                 <input type="password" name="old_password" placeholder="<?php echo htmlspecialchars($lang['old_password']); ?>" required class="input-field">
                 <input type="password" id="new_password" name="new_password" placeholder="<?php echo htmlspecialchars($lang['new_password']); ?>" required class="input-field">
+                
+                <!-- Индикатор за силата на новата парола -->
+                <div class="glass-tube" id="profile-password-strength-tube" style="margin-top: 5px; margin-bottom: 10px;">
+                    <div class="wave-fluid" id="profile-password-strength-wave"></div>
+                </div>
+
                 <input type="password" id="confirm_password" placeholder="<?php echo htmlspecialchars($lang['confirm_new_password']); ?>" required class="input-field">
                 <button type="submit" class="btn-update btn-dark"><?php echo htmlspecialchars($lang['update_password']); ?></button>
             </form>
@@ -182,6 +188,46 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
                 m.style.color = data.success ? "#28a745" : "#ff4444";
             });
         };
+
+        const profilePasswordInput = document.getElementById('new_password');    // password strength bar in profile pg
+        const profileGlassTube = document.getElementById('profile-password-strength-tube');
+        const profileWaveFluid = document.getElementById('profile-password-strength-wave');
+
+        if (profilePasswordInput) {
+            profilePasswordInput.addEventListener('input', function() {
+                const val = this.value;
+                if (val.length === 0) {
+                    profileGlassTube.style.display = 'none';
+                    return;
+                }
+                profileGlassTube.style.display = 'block';
+
+                let strength = 0;
+                if (val.length >= 6) strength += 20; 
+                if (val.length >= 10) strength += 20; 
+                if (/[A-Z]/.test(val)) strength += 20; 
+                if (/[0-9]/.test(val)) strength += 20; 
+                if (/[^A-Za-z0-9]/.test(val)) strength += 20; 
+
+                let color = '#ff4757';
+                let shadow = 'rgba(255, 71, 87, 0.6)';
+                
+                if (strength > 40 && strength <= 60) {
+                    color = '#ffa502';
+                    shadow = 'rgba(255, 165, 2, 0.6)';
+                } else if (strength > 60 && strength <= 80) {
+                    color = '#2ed573';
+                    shadow = 'rgba(46, 213, 115, 0.6)';
+                } else if (strength > 80) {
+                    color = '#1e90ff';
+                    shadow = 'rgba(30, 144, 255, 0.6)';
+                }
+
+                profileWaveFluid.style.width = strength + '%';
+                profileWaveFluid.style.backgroundColor = color;
+                profileWaveFluid.style.boxShadow = `0 0 10px ${shadow}`;
+            });
+        }
     });
 
     function loadFriends() {
@@ -207,7 +253,7 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
         if (confirm("<?php echo htmlspecialchars($lang['remove_confirm']); ?>")) {
             fetch('php/manage_friends.php', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' }, 
                 body: JSON.stringify({ action: 'unfriend', friendship_id: id })
             }).then(() => loadFriends());
         }
