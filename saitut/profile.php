@@ -23,11 +23,17 @@ $q_stmt->bind_param("i", $user_id);
 $q_stmt->execute();
 $quizzes_result = $q_stmt->get_result();
 
+$ach_query = "SELECT a.name, a.description, a.icon, ua.awarded_at FROM user_achievements ua JOIN achievements a ON ua.achievement_id = a.id WHERE ua.user_id = ? ORDER BY ua.awarded_at DESC";
+$ach_stmt = $conn->prepare($ach_query);
+$ach_stmt->bind_param("i", $user_id);
+$ach_stmt->execute();
+$achievements_result = $ach_stmt->get_result();
+
 $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 ?>
 
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,6 +75,22 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
                 <div class="stat-card"><?php echo htmlspecialchars($lang['incorrect_stat']); ?><br><span id="stat-wrong" class="color-danger">0</span></div>
                 <div class="stat-card"><?php echo htmlspecialchars($lang['rank_stat']); ?><br><span class="color-info"><?php echo htmlspecialchars($lang['expert']); ?></span></div>
             </div>
+        </div>
+
+        <div class="water-drop">
+            <h3 class="text-center">🏆 Achievements</h3>
+            <?php if ($achievements_result->num_rows > 0): ?>
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 15px;">
+                    <?php while ($ach = $achievements_result->fetch_assoc()): ?>
+                        <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 12px; text-align: center; width: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" title="<?php echo htmlspecialchars($ach['description']); ?>">
+                            <div style="font-size: 40px; margin-bottom: 10px;"><?php echo htmlspecialchars($ach['icon']); ?></div>
+                            <strong style="font-size: 14px; display: block; color: #fff;"><?php echo htmlspecialchars($ach['name']); ?></strong>
+                        </div>
+                    <?php endwhile; ?>
+                </div>
+            <?php else: ?>
+                <p class="text-center" style="color: #ccc;">You haven't earned any achievements yet. Keep playing!</p>
+            <?php endif; ?>
         </div>
 
         <div class="water-drop">
@@ -146,8 +168,6 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
             <form id="changePasswordForm">
                 <input type="password" name="old_password" placeholder="<?php echo htmlspecialchars($lang['old_password']); ?>" required class="input-field">
                 <input type="password" id="new_password" name="new_password" placeholder="<?php echo htmlspecialchars($lang['new_password']); ?>" required class="input-field">
-                
-                <!-- Индикатор за силата на новата парола -->
                 <div class="glass-tube" id="profile-password-strength-tube" style="margin-top: 5px; margin-bottom: 10px;">
                     <div class="wave-fluid" id="profile-password-strength-wave"></div>
                 </div>

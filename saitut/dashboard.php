@@ -195,9 +195,8 @@ $quizzes_result = $stmt_q->get_result();
                     results.innerHTML = '';
                     users.forEach(u => {
                         const div = document.createElement('div');
-                        div.className = 'user-result-item';
-                        div.innerHTML = `<span>${document.createTextNode(u.username).textContent}</span>
-                                         <button class="btn-friend" onclick="sendFriendRequest(${u.id})"><?php echo htmlspecialchars($lang['add']); ?></button>`;
+                        div.className = 'user-result-item';             // clickeble user search
+                        div.innerHTML = `<a href="user_profile.php?id=${u.id}" style="text-decoration: none; color: inherit; font-weight: bold; display: block; width: 100%; padding: 5px 0;" class="search-profile-link">${document.createTextNode(u.username).textContent}</a>`;
                         results.appendChild(div);
                     });
                 });
