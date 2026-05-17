@@ -78,6 +78,10 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
             </div>
         </div>
 
+        <div class="water-drop text-center">
+            <a href="forum/index.php" style="text-decoration: none; color: #005580; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 10px;">📋 Forum</a>
+        </div>
+
         <div class="water-drop">
             <h3 class="text-center">🏆 Achievements</h3>
             <?php if ($achievements_result->num_rows > 0): ?>
