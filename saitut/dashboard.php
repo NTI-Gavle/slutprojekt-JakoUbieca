@@ -114,7 +114,10 @@ $quizzes_result = $stmt_q->get_result();
                                 <b class="quiz-title quiz-title-styled"><?php echo htmlspecialchars($quiz['title']); ?></b>
                                 <small class="quiz-author"><?php echo htmlspecialchars($lang['author']); ?> <?php echo htmlspecialchars($quiz['author']); ?></small>
                             </div>
-                            <a href="quiz.php?id=<?php echo (int)$quiz['id']; ?>" class="btn-play"><?php echo htmlspecialchars($lang['play']); ?></a>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <button onclick="shareContent('<?php echo htmlspecialchars(addslashes($quiz['title'])); ?>', 'Play this awesome quiz!', '<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/quiz.php?id=' . (int)$quiz['id']; ?>')" style="background: transparent; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" title="<?php echo htmlspecialchars($lang['share'] ?? 'Share'); ?>">🔗</button>
+                                <a href="quiz.php?id=<?php echo (int)$quiz['id']; ?>" class="btn-play"><?php echo htmlspecialchars($lang['play']); ?></a>
+                            </div>
                         </div>
                         <?php endwhile; ?>
                     </div>
@@ -315,5 +318,6 @@ $quizzes_result = $stmt_q->get_result();
             tile.addEventListener('mouseleave', () => tile.style.transform = `perspective(1000px) scale(1) rotateX(0) rotateY(0)`);
         });
     </script>
+    <script src="js/share.js"></script>
 </body>
 </html>

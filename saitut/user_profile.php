@@ -2,12 +2,14 @@
 session_start();
 include "php/db.php";
 
-if (!isset($_SESSION['user_id'])) {
+$is_bot = preg_match('/bot|crawler|spider|discord|facebook|twitter|slack|whatsapp|telegram|skype|vkshare/i', $_SERVER['HTTP_USER_AGENT'] ?? '');
+
+if (!isset($_SESSION['user_id']) && !$is_bot) {
     header("Location: login.php");
     exit;
 }
 
-$my_id = $_SESSION['user_id'];
+$my_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
 $profile_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($profile_id === 0) {
@@ -82,6 +84,13 @@ $f_stmt->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($username); ?>'s Profile</title>
+    
+    <meta property="og:title" content="<?php echo htmlspecialchars($username); ?>'s Profile">            <!-- Meta Tag -->
+    <meta property="og:description" content="See <?php echo htmlspecialchars($username); ?>'s freaky profile on Freaky Quiz!">
+    <meta property="og:image" content="<?php echo htmlspecialchars($display_pic); ?>">
+    <meta property="og:type" content="profile">
+    <meta name="theme-color" content="#6c5ce7">
+    
     <link rel="stylesheet" href="css/user_profile.css?v=<?php echo time(); ?>">
 </head>
 <body class="aero-body">
@@ -115,6 +124,8 @@ $f_stmt->close();
                         <?php elseif ($friendship_status == 'friends'): ?>
                             <button class="btn-aero" style="background: #22a6b3; cursor: default;">🤝 Friends</button>
                         <?php endif; ?>
+
+                        <button class="btn-aero" style="background: #6c5ce7; box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4), 0 4px 10px rgba(108, 92, 231, 0.4);" onclick="shareContent('<?php echo htmlspecialchars(addslashes($username)); ?>\'s Profile', 'Check out this profile on the platform!')">🔗 Share Profile</button>
 
                         <?php if ($is_admin == 1): ?>
                             <button class="btn-aero btn-admin-action" onclick="openMedalModal(<?php echo $profile_id; ?>)">
@@ -247,5 +258,6 @@ $f_stmt->close();
     }
     <?php endif; ?>
     </script>
+    <script src="js/share.js"></script>
 </body>
 </html>

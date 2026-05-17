@@ -1,19 +1,39 @@
 <?php
 session_start();
 include "php/lang_config.php";
-if (!isset($_SESSION['user_id'])) {
+$is_bot = preg_match('/bot|crawler|spider|discord|facebook|twitter|slack|whatsapp|telegram|skype|vkshare/i', $_SERVER['HTTP_USER_AGENT'] ?? '');
+
+if (!isset($_SESSION['user_id']) && !$is_bot) {
     header("Location: login.php");
     exit;
 }
 
 $quiz_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+include "php/db.php";
+$quiz_title = "Quiz Maker";
+if ($quiz_id > 0) {
+    $stmt = $conn->prepare("SELECT title FROM quizzes WHERE id = ?");
+    $stmt->bind_param("i", $quiz_id);
+    $stmt->execute();
+    $stmt->bind_result($q_title);
+    if ($stmt->fetch()) {
+        $quiz_title = $q_title;
+    }
+    $stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play - Quiz Maker</title>
+    <title>Play - <?php echo htmlspecialchars($quiz_title); ?></title>
+    
+    <meta property="og:title" content="<?php echo htmlspecialchars($quiz_title); ?>">       <!-- Meta Tag2 -->
+    <meta property="og:description" content="Play <?php echo htmlspecialchars($quiz_title); ?> on Freaky Quiz! Join the best Quiz Website on the Universy!">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#6c5ce7">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/quiz.css">
 </head>
@@ -41,7 +61,8 @@ $quiz_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
         <div id="rankings-content"></div>
     </div>
 
-    <div class="exit-wrapper">
+    <div class="exit-wrapper" style="display: flex; gap: 15px; justify-content: center;">
+        <button id="share-quiz" class="exit-btn" style="background: #6c5ce7; box-shadow: 0 6px 0 #4834d4;" onclick="shareContent('Play this Quiz!', 'Can you beat my score on this awesome quiz?')">🔗 Share Quiz</button>
         <button id="exit-quiz" class="exit-btn">❌ Exit Quiz</button>
     </div>
 
@@ -49,7 +70,7 @@ $quiz_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 <script>
     const quizId = <?php echo $quiz_id; ?>;
-    const userId = <?php echo $_SESSION['user_id']; ?>;
+    const userId = <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0; ?>;
 </script>
 
 <script src="js/effects.js"></script>
@@ -87,6 +108,8 @@ $quiz_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
         }, 3000);
     }
 </script>
+
+<script src="js/share.js"></script>
 
 </body>
 </html>

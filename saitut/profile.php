@@ -55,11 +55,12 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
             
             <img id="current-profile-pic" src="<?php echo $display_pic; ?>" alt="Profile" class="profile-main-pic">
             
-            <?php if ($is_admin == 1): ?>
-            <div style="margin-top: 15px;">
+            <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="shareContent('<?php echo htmlspecialchars(addslashes($username)); ?>\'s Profile', 'Check out my profile on the platform!', '<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/user_profile.php?id=' . $user_id; ?>')" style="background: #6c5ce7; color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4); display: inline-block; border: none; cursor: pointer;">🔗 <?php echo htmlspecialchars($lang['share'] ?? 'Share Profile'); ?></button>
+                <?php if ($is_admin == 1): ?>
                 <a href="admin/panel.php" class="btn-admin" style="background: #ff4757; color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4); display: inline-block;">🛠️ Admin Panel</a>
+                <?php endif; ?>
             </div>
-            <?php endif; ?>
 
             <div class="mt-20">
                 <span class="points-label"><?php echo htmlspecialchars($lang['total_points']); ?></span>
@@ -279,5 +280,6 @@ $display_pic = $profile_pic ? $profile_pic : "https://cdn-icons-png.flaticon.com
         }
     }
     </script>
+    <script src="js/share.js"></script>
 </body>
 </html>

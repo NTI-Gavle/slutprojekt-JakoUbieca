@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Freaky Quiz</title>
+    <meta property="og:title" content="Freaky Quiz">
+    <meta property="og:description" content="Join the best Quiz Website on the Universy!">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#6c5ce7">
+    
     <link rel="stylesheet" href="css/style.css">
 
 </head>
