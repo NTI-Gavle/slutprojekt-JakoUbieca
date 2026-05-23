@@ -37,5 +37,8 @@ while ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
+include_once "../../php/sanitize.php";
+sanitize_array($results);
+
 echo json_encode($results);
 ?>

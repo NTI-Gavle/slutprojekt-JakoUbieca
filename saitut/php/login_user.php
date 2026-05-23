@@ -40,7 +40,7 @@ if ($stmt->num_rows === 1) {
             $_SESSION['user_id'] = $id;
             $_SESSION['username'] = $username;
             addSystemLog($conn, $id, "Logged in");
-            header("Location: ../dashboard.php");
+            header("Location: ../hub.php");
             exit;
         } else {
             $code = rand(100000, 999999);

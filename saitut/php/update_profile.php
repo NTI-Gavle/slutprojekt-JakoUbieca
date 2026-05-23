@@ -25,48 +25,75 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $response['success'] = true;
     }
 
-    
-    if (isset($_POST['profile_url']) && !empty($_POST['profile_url'])) {
-        $new_url = $_POST['profile_url'];
+    if (isset($_POST['profile_url'])) {
+        $new_url = $conn->real_escape_string($_POST['profile_url']);
         $stmt = $conn->prepare("UPDATE users SET profile_pic = ? WHERE id = ?");
         $stmt->bind_param("si", $new_url, $user_id);
-        if ($stmt->execute()) {
-            $response['success'] = true;
-            $response['new_pic'] = $new_url;
-        }
+        $stmt->execute();
         $stmt->close();
+        $response['success'] = true;
     }
 
-    
+    if (isset($_POST['cover_url'])) {
+        $cover_url = $conn->real_escape_string($_POST['cover_url']);
+        $stmt = $conn->prepare("UPDATE users SET cover_url = ? WHERE id = ?");
+        $stmt->bind_param("si", $cover_url, $user_id);
+        $stmt->execute();
+        $stmt->close();
+        $response['success'] = true;
+    }
+
+    if (isset($_POST['bio'])) {
+        // Enforce 100 words max on backend
+        $bio = trim($_POST['bio']);
+        $words = preg_split('/\s+/', $bio, -1, PREG_SPLIT_NO_EMPTY);
+        if (count($words) > 100) {
+            $bio = implode(" ", array_slice($words, 0, 100));
+        }
+        $bio_safe = $conn->real_escape_string($bio);
+        
+        $stmt = $conn->prepare("UPDATE users SET bio = ? WHERE id = ?");
+        $stmt->bind_param("si", $bio_safe, $user_id);
+        $stmt->execute();
+        $stmt->close();
+        $response['success'] = true;
+    }
+
     if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] === 0) {
         $uploadDir = '../uploads/';
-        
-        
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $fileName = time() . '_' . basename($_FILES['profile_pic']['name']);
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        $fileName = time() . '_p_' . basename($_FILES['profile_pic']['name']);
         $targetFilePath = $uploadDir . $fileName;
         $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-
-      
-        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+        $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'webp');
         if (in_array(strtolower($fileType), $allowTypes)) {
             if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $targetFilePath)) {
                 $dbPath = 'uploads/' . $fileName; 
                 $stmt = $conn->prepare("UPDATE users SET profile_pic = ? WHERE id = ?");
                 $stmt->bind_param("si", $dbPath, $user_id);
-                if ($stmt->execute()) {
-                    $response['success'] = true;
-                    $response['new_pic'] = $dbPath;
-                }
+                $stmt->execute();
                 $stmt->close();
-            } else {
-                $response['message'] = 'Error uploading the file.';
+                $response['success'] = true;
             }
-        } else {
-            $response['message'] = 'Only JPG, JPEG, PNG & GIF files are allowed.';
+        }
+    }
+
+    if (isset($_FILES['cover_pic']) && $_FILES['cover_pic']['error'] === 0) {
+        $uploadDir = '../uploads/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        $fileName = time() . '_c_' . basename($_FILES['cover_pic']['name']);
+        $targetFilePath = $uploadDir . $fileName;
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+        $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'webp');
+        if (in_array(strtolower($fileType), $allowTypes)) {
+            if (move_uploaded_file($_FILES['cover_pic']['tmp_name'], $targetFilePath)) {
+                $dbPath = 'uploads/' . $fileName; 
+                $stmt = $conn->prepare("UPDATE users SET cover_url = ? WHERE id = ?");
+                $stmt->bind_param("si", $dbPath, $user_id);
+                $stmt->execute();
+                $stmt->close();
+                $response['success'] = true;
+            }
         }
     }
 

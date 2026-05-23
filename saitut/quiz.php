@@ -36,13 +36,22 @@ if ($quiz_id > 0) {
     <meta name="theme-color" content="#6c5ce7">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/global_neon.css">
 </head>
-<body class="quiz-page">
+<body class="neon-theme">
+
+<div class="bg-particles">
+    <div class="particle" style="width: 300px; height: 300px; top: 10%; left: 20%;"></div>
+    <div class="particle" style="width: 200px; height: 200px; top: 60%; left: 80%; animation-delay: -5s;"></div>
+    <div class="particle" style="width: 250px; height: 250px; top: 80%; left: 30%; animation-delay: -10s;"></div>
+</div>
 
 <?php include "php/lang_ui.php"; ?>
 <?php include "Rapport/ui.php"; ?>
 
-<div class="container main-quiz-island" id="quiz-container">
+<div class="neon-container" style="--form-width: 800px; margin: auto;">
+    <div class="neon-glass-box">
+        <div class="container main-quiz-island" id="quiz-container" style="background: transparent; box-shadow: none; max-width: 100%;">
 
     <div id="quiz-media" class="quiz-media-container"></div>
 
@@ -62,10 +71,12 @@ if ($quiz_id > 0) {
     </div>
 
     <div class="exit-wrapper" style="display: flex; gap: 15px; justify-content: center;">
-        <button id="share-quiz" class="exit-btn" style="background: #6c5ce7; box-shadow: 0 6px 0 #4834d4;" onclick="shareContent('Play this Quiz!', 'Can you beat my score on this awesome quiz?')">🔗 Share Quiz</button>
-        <button id="exit-quiz" class="exit-btn">❌ Exit Quiz</button>
+        <button id="share-quiz" class="neon-btn" onclick="shareContent('Play this Quiz!', 'Can you beat my score on this awesome quiz?')">🔗 Share Quiz</button>
+        <button id="exit-quiz" class="neon-btn neon-btn-outline">❌ Exit Quiz</button>
     </div>
 
+</div>
+    </div>
 </div>
 
 <script>
@@ -74,7 +85,7 @@ if ($quiz_id > 0) {
 </script>
 
 <script src="js/effects.js"></script>
-<script src="js/quiz.js?v=3"></script>
+<script src="js/quiz.js?v=4"></script>
 
 <script>
     const params = new URLSearchParams(window.location.search);

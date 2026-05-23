@@ -30,12 +30,12 @@ if (!isset($_SESSION['temp_user_id'])) {
                        style="width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; text-align: center; font-size: 24px; letter-spacing: 5px;">
             </div>
 
-            <button type="submit" class="auth-button confirm-btn" style="width: 100%; padding: 15px; cursor: pointer;">Потвърди</button>
+            <button type="submit" class="auth-button confirm-btn" style="width: 100%; padding: 15px; cursor: pointer;">Confirm</button>
         </form>
 
         <div class="auth-footer" style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
             <p class="auth-text" style="color: rgba(255,255,255,0.7);">
-                <a href="login.php" class="auth-link-main" style="color: #ffcc00; text-decoration: none; font-weight: bold;">Обратно към логин</a>
+                <a href="login.php" class="auth-link-main" style="color: #ffcc00; text-decoration: none; font-weight: bold;">Back to Login</a>
             </p>
         </div>
     </div>

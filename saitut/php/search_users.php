@@ -17,4 +17,7 @@ while ($row = $result->fetch_assoc()) {
     $users[] = $row;
 }
 
+include_once "sanitize.php";
+sanitize_array($users);
+
 echo json_encode($users);

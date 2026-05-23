@@ -48,12 +48,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
-  if (request.method !== 'GET') return;
-
-  const isApi = url.pathname.includes('/php/') || url.pathname.includes('/forum/php/') || url.pathname.includes('/admin/');
-  const isCacheableApi = url.pathname.includes('get_questions.php') || url.pathname.includes('get_leaderboard.php');
-
-  if (isApi && !isCacheableApi) return;
+  if (url.pathname.includes('/php/') || url.pathname.includes('/forum/php/') || url.pathname.includes('/admin/')) return;
 
   if (request.mode === 'navigate') {
     event.respondWith(
@@ -63,16 +58,7 @@ self.addEventListener('fetch', event => {
           caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
           return resp;
         })
-        .catch(() => {
-          return caches.match(request).then(cachedResp => {
-            if (cachedResp) return cachedResp;
-
-            if (url.pathname.includes('quiz.php')) {
-              return caches.match('quiz.php');
-            }
-            return caches.match(OFFLINE_URL);
-          });
-        })
+        .catch(() => caches.match(OFFLINE_URL))
     );
     return;
   }

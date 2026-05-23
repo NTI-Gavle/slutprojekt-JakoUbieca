@@ -118,5 +118,112 @@ $lang = [
     'loading_question' => 'Loading question...',
     'score' => 'Score:',
     'live_rankings' => 'Live Rankings',
-    'exit_quiz' => 'Exit Quiz'
+    'exit_quiz' => 'Exit Quiz',
+
+    // New additions
+    'hub_quizzes' => 'QUIZZES',
+    'hub_chat' => 'CHAT',
+    'hub_forum' => 'FORUM',
+    'hub_profile' => 'PROFILE',
+    'hub_admin' => 'ADMIN',
+    'hub_scroll_hint' => 'SCROLL OR DRAG TO ROTATE',
+    
+    'top_users' => '🏆 Top Users',
+    'hub_nav' => 'Hub',
+    
+    'chat_friends' => 'Friends',
+    'chat_rooms' => 'Rooms',
+    'chat_search' => 'Search...',
+    'chat_type_message' => 'Type a message...',
+    'chat_send' => 'Send',
+    'chat_emojis' => 'Emojis',
+    'chat_gifs' => 'GIFs',
+    'chat_search_giphy' => 'Search Giphy...',
+    'chat_room_settings' => 'Room Settings',
+    'chat_rename_room' => 'Rename Room:',
+    'chat_save' => 'Save',
+    'chat_members' => 'Members:',
+    'chat_no_rooms' => 'No rooms available.',
+    'chat_create_room_prompt' => 'Enter a name for the new room:',
+    'chat_new_room' => '+ New Room',
+
+    // Forum Global/Index
+    'forum_community' => '📋 Community',
+    'forum_hub' => '🌌 Hub',
+    'forum_dashboard' => '← Dashboard',
+    'forum_notifications' => '🔔 Notifications',
+    'forum_hero_title' => 'The forum awaits you',
+    'forum_hero_desc' => 'Share, learn, discuss, with the community',
+    'forum_search_placeholder' => '🔍 Search threads and posts...',
+    'forum_quick_links' => 'Quick Links',
+    'forum_request_category' => '📁 Request Category',
+    'forum_admin_panel' => '⚙️ Admin Panel',
+    'forum_categories' => 'Categories',
+    'forum_threads_count' => 'Threads',
+    'forum_posts_count' => 'Posts',
+    'forum_no_categories' => 'No categories yet. Be the first to request one',
+
+    // Category View
+    'forum_all_categories' => '← All Categories',
+    'forum_subscribe' => '🔕 Subscribe',
+    'forum_unsubscribe' => '🔔 Unsubscribe',
+    'forum_new_thread' => '✏️ New Thread',
+    'forum_navigation' => 'Navigation',
+    'forum_pinned' => 'Pinned',
+    'forum_locked' => 'Locked',
+    'forum_by' => 'by',
+    'forum_no_threads' => 'No threads in this category yet. Start one!',
+
+    // Thread View
+    'forum_reply' => 'Reply',
+    'forum_post_reply' => 'Post Reply',
+    'forum_delete' => 'Delete',
+    'forum_views' => 'views',
+
+    // Create Thread
+    'forum_create_thread_title' => 'Create Thread in',
+    'forum_thread_title_label' => 'Thread Title',
+    'forum_thread_content_label' => 'Content',
+    'forum_submit_thread' => 'Post Thread',
+    'forum_cancel' => 'Cancel',
+
+    // Request Category
+    'forum_req_cat_title' => 'Request a New Category',
+    'forum_req_cat_name' => 'Category Name:',
+    'forum_req_cat_reason' => 'Reason/Description:',
+    'forum_req_cat_submit' => 'Submit Request',
+
+    // Profile Pages
+    'profile_achievements' => '🏆 Achievements',
+    'profile_no_achievements' => 'You haven\'t earned any achievements yet. Keep playing!',
+    'profile_public_title' => 'Public Profile',
+    'profile_back_dashboard' => '← Back to Dashboard',
+    'profile_friends' => '👥 Friends',
+    'profile_message' => '💬 Message',
+    'profile_send_request' => '➕ Send Request',
+    'profile_request_sent' => '⏳ Request Sent',
+    'profile_review_request' => '📥 Review Request',
+    'profile_accept_request' => '✅ Accept Request',
+    'profile_medals_achievements' => '🏅 Medals & Achievements',
+    'profile_published_quizzes' => '🎮 Published Quizzes',
+    'profile_no_quizzes_published' => 'No quizzes published by this user.',
+    'profile_forum_activity' => '📋 Forum Activity',
+    'profile_no_forum_activity' => 'No forum activity yet.',
+    'profile_admin_controls' => '⚙️ Admin Controls',
+    'profile_award_medal' => 'Award Medal',
+    'profile_share_profile' => 'Share Profile',
+    'forum_view_thread' => 'View Thread',
+
+    // Profile page uploads
+    'profile_picture_upload' => 'Profile Picture (URL or File)',
+    'cover_photo_upload' => 'Cover Photo (URL or File)',
+    'bio_label' => 'Bio',
+    'bio_placeholder' => 'Write a short bio (max 100 words)...',
+    'avatar_ready' => '✅ Avatar ready to save',
+    'cover_ready' => '✅ Cover ready to save',
+    'choose_file' => 'Choose File',
+    'no_file_chosen' => 'No file chosen',
+    'crop_image' => 'Crop Image',
+    'crop_select' => 'Crop & Select',
+    'cancel' => 'Cancel'
 ];

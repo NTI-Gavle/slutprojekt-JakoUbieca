@@ -16,5 +16,8 @@ $res = $stmt->get_result();
 while($r = $res->fetch_assoc()){
     $reports[] = $r;
 }
+include_once "../php/sanitize.php";
+sanitize_array($reports);
+
 echo json_encode(['success' => true, 'reports' => $reports]);
 ?>

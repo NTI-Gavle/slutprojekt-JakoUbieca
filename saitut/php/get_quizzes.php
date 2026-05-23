@@ -12,4 +12,6 @@ if ($result) {
 }
 
 header("Content-Type: application/json");
+include_once "sanitize.php";
+sanitize_array($quizzes);
 echo json_encode($quizzes);

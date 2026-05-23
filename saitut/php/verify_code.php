@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         unset($_SESSION['temp_user_id']);
         unset($_SESSION['temp_username']);
         addSystemLog($conn, $id, "Logged in from a new verified device"); 
-        header("Location: ../dashboard.php");
+        header("Location: ../hub.php");
         exit;
     } else {
         echo "<script>alert('Invalid verification code!'); window.location.href='../verify_2fa.php';</script>";

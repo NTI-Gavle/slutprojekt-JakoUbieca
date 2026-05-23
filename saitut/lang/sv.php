@@ -118,5 +118,112 @@ $lang = [
     'loading_question' => 'Laddar fråga...',
     'score' => 'Poäng:',
     'live_rankings' => 'Live-ranking',
-    'exit_quiz' => 'Avsluta Quiz'
+    'exit_quiz' => 'Avsluta Quiz',
+
+    // New additions
+    'hub_quizzes' => 'QUIZ',
+    'hub_chat' => 'CHATT',
+    'hub_forum' => 'FORUM',
+    'hub_profile' => 'PROFIL',
+    'hub_admin' => 'ADMIN',
+    'hub_scroll_hint' => 'SKROLLA ELLER DRA FÖR ATT ROTERA',
+    
+    'top_users' => '🏆 Toppanvändare',
+    'hub_nav' => 'Hubb',
+    
+    'chat_friends' => 'Vänner',
+    'chat_rooms' => 'Rum',
+    'chat_search' => 'Sök...',
+    'chat_type_message' => 'Skriv ett meddelande...',
+    'chat_send' => 'Skicka',
+    'chat_emojis' => 'Emojis',
+    'chat_gifs' => 'GIFs',
+    'chat_search_giphy' => 'Sök Giphy...',
+    'chat_room_settings' => 'Ruminställningar',
+    'chat_rename_room' => 'Byt namn på rum:',
+    'chat_save' => 'Spara',
+    'chat_members' => 'Medlemmar:',
+    'chat_no_rooms' => 'Inga rum tillgängliga.',
+    'chat_create_room_prompt' => 'Ange ett namn för det nya rummet:',
+    'chat_new_room' => '+ Nytt rum',
+
+    // Forum Global/Index
+    'forum_community' => '📋 Gemenskap',
+    'forum_hub' => '🌌 Hubb',
+    'forum_dashboard' => '← Instrumentpanel',
+    'forum_notifications' => '🔔 Notiser',
+    'forum_hero_title' => 'Forumet väntar på dig',
+    'forum_hero_desc' => 'Dela, lär, diskutera med gemenskapen',
+    'forum_search_placeholder' => '🔍 Sök trådar och inlägg...',
+    'forum_quick_links' => 'Snabblänkar',
+    'forum_request_category' => '📁 Begär kategori',
+    'forum_admin_panel' => '⚙️ Adminpanel',
+    'forum_categories' => 'Kategorier',
+    'forum_threads_count' => 'Trådar',
+    'forum_posts_count' => 'Inlägg',
+    'forum_no_categories' => 'Inga kategorier ännu. Var den första att begära en',
+
+    // Category View
+    'forum_all_categories' => '← Alla kategorier',
+    'forum_subscribe' => '🔕 Prenumerera',
+    'forum_unsubscribe' => '🔔 Avsluta prenumeration',
+    'forum_new_thread' => '✏️ Ny tråd',
+    'forum_navigation' => 'Navigering',
+    'forum_pinned' => 'Fäst',
+    'forum_locked' => 'Låst',
+    'forum_by' => 'av',
+    'forum_no_threads' => 'Inga trådar i den här kategorin ännu. Starta en!',
+
+    // Thread View
+    'forum_reply' => 'Svara',
+    'forum_post_reply' => 'Skicka svar',
+    'forum_delete' => 'Ta bort',
+    'forum_views' => 'visningar',
+
+    // Create Thread
+    'forum_create_thread_title' => 'Skapa tråd i',
+    'forum_thread_title_label' => 'Trådtitel',
+    'forum_thread_content_label' => 'Innehåll',
+    'forum_submit_thread' => 'Skapa tråd',
+    'forum_cancel' => 'Avbryt',
+
+    // Request Category
+    'forum_req_cat_title' => 'Begär en ny kategori',
+    'forum_req_cat_name' => 'Kategorinamn:',
+    'forum_req_cat_reason' => 'Anledning/Beskrivning:',
+    'forum_req_cat_submit' => 'Skicka begäran',
+
+    // Profile Pages
+    'profile_achievements' => '🏆 Prestationer',
+    'profile_no_achievements' => 'Du har inte tjänat några prestationer ännu. Fortsätt spela!',
+    'profile_public_title' => 'Offentlig profil',
+    'profile_back_dashboard' => '← Tillbaka till instrumentpanelen',
+    'profile_friends' => '👥 Vänner',
+    'profile_message' => '💬 Meddelande',
+    'profile_send_request' => '➕ Skicka förfrågan',
+    'profile_request_sent' => '⏳ Förfrågan skickad',
+    'profile_review_request' => '📥 Granska förfrågan',
+    'profile_accept_request' => '✅ Acceptera förfrågan',
+    'profile_medals_achievements' => '🏅 Medaljer & Prestationer',
+    'profile_published_quizzes' => '🎮 Publicerade Quizzes',
+    'profile_no_quizzes_published' => 'Inga quizzes publicerade av denna användare.',
+    'profile_forum_activity' => '📋 Forumaktivitet',
+    'profile_no_forum_activity' => 'Ingen forumaktivitet ännu.',
+    'profile_admin_controls' => '⚙️ Adminkontroller',
+    'profile_award_medal' => 'Dela ut medalj',
+    'profile_share_profile' => 'Dela profil',
+    'forum_view_thread' => 'Visa tråd',
+
+    // Profile page uploads
+    'profile_picture_upload' => 'Profilbild (URL eller fil)',
+    'cover_photo_upload' => 'Omslagsbild (URL eller fil)',
+    'bio_label' => 'Biografi',
+    'bio_placeholder' => 'Skriv en kort biografi (max 100 ord)...',
+    'avatar_ready' => '✅ Profilbild redo att sparas',
+    'cover_ready' => '✅ Omslagsbild redo att sparas',
+    'choose_file' => 'Välj fil',
+    'no_file_chosen' => 'Ingen fil vald',
+    'crop_image' => 'Beskär bild',
+    'crop_select' => 'Beskär & Välj',
+    'cancel' => 'Avbryt'
 ];

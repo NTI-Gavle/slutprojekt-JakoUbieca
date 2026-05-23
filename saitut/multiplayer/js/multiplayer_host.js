@@ -2,7 +2,7 @@ let currentSessionId = null;
 let lobbyPollInterval = null;
 
 
-document.getElementById('btn-create-lobby').addEventListener('click', function() {           // Skickar en begäran till servern om ett nytt spel, visar åtkomstkoden och aktiverar automatisk uppdatering av spelarna.
+document.getElementById('btn-create-lobby').addEventListener('click', function () {           // Skickar en begäran till servern om ett nytt spel, visar åtkomstkoden och aktiverar automatisk uppdatering av spelarna.
     fetch('php/create_lobby.php')
         .then(res => res.json())
         .then(data => {
@@ -12,13 +12,13 @@ document.getElementById('btn-create-lobby').addEventListener('click', function()
                 document.getElementById('active-lobby').style.display = 'block';
                 const hostTitle = document.querySelector('#host-controls h2');
                 if (hostTitle) {
-                 hostTitle.innerText = "You are the Host (Session ID: " + currentSessionId + ")";
+                    hostTitle.innerText = "You are the Host (Session ID: " + currentSessionId + ")";
                 }
-                
-               
+
+
                 this.style.display = 'none';
 
-                                                                          // Startar en cykel (polling) som varannan sekund kontrollerar om det finns nya spelare i lobbyn.
+                // Startar en cykel (polling) som varannan sekund kontrollerar om det finns nya spelare i lobbyn.
                 lobbyPollInterval = setInterval(checkLobbyStatus, 2000);
             } else {
                 alert("Error: " + data.message);
@@ -35,7 +35,7 @@ function checkLobbyStatus() {
         .then(players => {
             const waitingList = document.getElementById('waiting-players-list');
             const approvedList = document.getElementById('approved-players-list');
-            
+
             waitingList.innerHTML = "";
             approvedList.innerHTML = "";
 
@@ -46,7 +46,7 @@ function checkLobbyStatus() {
 
                 if (p.status === 'pending') {
                     const btn = document.createElement('button');
-                    btn.innerText = "Одобри";
+                    btn.innerText = "Approve";
                     btn.style.width = "auto";
                     btn.style.padding = "5px 10px";
                     btn.style.marginLeft = "10px";
@@ -58,13 +58,13 @@ function checkLobbyStatus() {
                     approvedList.appendChild(li);
                 }
             });
-            
+
 
             document.getElementById('btn-start-game').disabled = (approvedList.children.length === 0);
         });
 
 
-        
+
 }
 
 
@@ -73,14 +73,14 @@ function approvePlayer(playerId) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                checkLobbyStatus(); 
+                checkLobbyStatus();
             }
         });
 }
 
 
 document.addEventListener("DOMContentLoaded", () => {            // Så snart sidan är klar laddas alla tillgängliga frågesporter från servern i rullgardinsmenyn.
-    fetch('../php/get_quizzes.php') 
+    fetch('../php/get_quizzes.php')
         .then(res => res.json())
         .then(data => {
             const select = document.getElementById('select-quiz');
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {            // Så snart si
 
 document.getElementById('btn-start-game').addEventListener('click', () => {     // Skickar en signal till alla spelare i sessionen att starta testet och omdirigerar värden till spelskärmen.
     const quizId = document.getElementById('select-quiz').value;
-    
+
     if (!quizId) {
         alert("Please select a quiz first!");
         return;
@@ -104,7 +104,7 @@ document.getElementById('btn-start-game').addEventListener('click', () => {     
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                
+
                 window.location.href = `../quiz.php?id=${quizId}&mode=multi&session_id=${currentSessionId}`;
             }
         });

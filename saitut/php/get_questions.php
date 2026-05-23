@@ -24,14 +24,15 @@ $questions = [];
 while ($q = $result->fetch_assoc()) {
     $q_id = $q['id'];
     $q['points_value'] = $q['points_value'] ?? 10;
-    
+
+    unset($q['correct_answer']);
     
     $q['timer'] = isset($q['timer']) ? (int)$q['timer'] : 30;
     
     $q['answers'] = [];
 
     $ans_query = $conn->prepare("
-        SELECT answer, is_correct
+        SELECT id, answer, is_correct
         FROM answers
         WHERE question_id = ?
     ");
@@ -43,8 +44,8 @@ while ($q = $result->fetch_assoc()) {
 
     while ($a = $ans_result->fetch_assoc()) {
         $q['answers'][] = [
-            "text" => $a['answer'],
-            "is_correct" => (int)$a['is_correct']
+            "id" => $a['id'],
+            "text" => $a['answer']
         ];
 
         if ((int)$a['is_correct'] === 1) {
@@ -69,4 +70,6 @@ while ($q = $result->fetch_assoc()) {
 header("Content-Type: application/json");
 
 header("Cache-Control: no-cache, must-revalidate"); 
+include_once "sanitize.php";
+sanitize_array($questions);
 echo json_encode($questions);

@@ -76,3 +76,44 @@ $asset_base = "/saitut/Rapport/";
 </div>
 
 <script src="<?php echo $asset_base; ?>script.js"></script>
+
+<!-- global dyslexia mode -->
+<style>
+@import url('https://fonts.cdnfonts.com/css/open-dyslexic');
+
+body.dyslexia-mode, 
+body.dyslexia-mode * {
+    font-family: 'Open Dyslexic', 'Comic Sans MS', sans-serif !important;
+    letter-spacing: 0.05em !important;
+    word-spacing: 0.1em !important;
+    line-height: 1.6 !important;
+}
+</style>
+<script>
+    function applyDyslexiaMode() {
+        if (localStorage.getItem('dyslexia_mode') === 'on') {
+            document.body.classList.add('dyslexia-mode');
+        } else {
+            document.body.classList.remove('dyslexia-mode');
+        }
+        
+        const btn = document.getElementById('dyslexia-toggle-btn');
+        if (btn) {
+            btn.innerText = localStorage.getItem('dyslexia_mode') === 'on' ? 'Dyslexia On' : 'Dyslexia Off';
+            btn.style.background = localStorage.getItem('dyslexia_mode') === 'on' ? '#2ed573' : '#ff4757';
+        }
+    }
+
+    function toggleDyslexia() {
+        if (localStorage.getItem('dyslexia_mode') === 'on') {
+            localStorage.setItem('dyslexia_mode', 'off');
+        } else {
+            localStorage.setItem('dyslexia_mode', 'on');
+        }
+        applyDyslexiaMode();
+    }
+
+    applyDyslexiaMode();
+    document.addEventListener("DOMContentLoaded", applyDyslexiaMode);
+</script>
+<?php include __DIR__ . '/../gdpr/gdpr_banner.php'; ?>

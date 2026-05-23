@@ -37,8 +37,15 @@ if ($thread['is_locked']) {
     exit;
 }
 
-$stmt = $conn->prepare("INSERT INTO forum_posts (thread_id, user_id, body) VALUES (?, ?, ?)");
-$stmt->bind_param("iis", $thread_id, $user_id, $body);
+$image_url = isset($data['image_url']) ? trim($data['image_url']) : null;
+
+if ($image_url) {
+    $stmt = $conn->prepare("INSERT INTO forum_posts (thread_id, user_id, body, image_url) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("iiss", $thread_id, $user_id, $body, $image_url);
+} else {
+    $stmt = $conn->prepare("INSERT INTO forum_posts (thread_id, user_id, body) VALUES (?, ?, ?)");
+    $stmt->bind_param("iis", $thread_id, $user_id, $body);
+}
 
 if ($stmt->execute()) {                                                                                // notf to author 
     if ($thread['user_id'] != $user_id) {

@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "../php/lang_config.php";
 include "../php/db.php";
 
 if (!isset($_SESSION['user_id'])) {
@@ -64,12 +65,11 @@ $is_thread_author = ($thread['user_id'] == $user_id);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <title><?php echo htmlspecialchars($thread['title']); ?> - Forum</title>
-    <meta property="og:title" content="<?php echo htmlspecialchars($thread['title']); ?>">
-    <meta property="og:description" content="Discussion on Freaky Quiz Forum">
-    <meta name="theme-color" content="#00aaff">
+    <meta name="theme-color" content="#FF7B00">
     <link rel="stylesheet" href="css/forum.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/intercom.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -77,43 +77,67 @@ $is_thread_author = ($thread['user_id'] == $user_id);
     <div class="grass-floor"></div>
 
     <div class="forum-container">
-        <div class="breadcrumb">
-            <a href="index.php">Forum</a>
+        <div class="breadcrumb" style="margin-bottom: 20px;">
+            <a href="index.php"><?php echo htmlspecialchars($lang['forum_community']); ?></a>
             <span>›</span>
-            <a href="category.php?id=<?php echo $thread['cat_id']; ?>"><?php echo htmlspecialchars($thread['cat_icon'] . ' ' . $thread['cat_name']); ?></a>
+            <a href="category.php?id=<?php echo $thread['cat_id']; ?>"><?php echo htmlspecialchars($thread['cat_name']); ?></a>
             <span>›</span>
-            <span><?php echo htmlspecialchars($thread['title']); ?></span>
+            <span style="opacity: 0.7;"><?php echo htmlspecialchars($thread['title']); ?></span>
         </div>
 
-        <div class="forum-header">
-            <h1>
+        <div class="intercom-hero" style="padding: 40px; text-align: left;">
+            <h1 style="font-size: 2rem; margin-bottom: 10px;">
                 <?php if ($thread['is_pinned']): ?><span title="Pinned">📌</span><?php endif; ?>
                 <?php if ($thread['is_locked']): ?><span title="Locked">🔒</span><?php endif; ?>
                 <?php echo htmlspecialchars($thread['title']); ?>
             </h1>
-            <div class="forum-nav">
-                <button class="btn-forum" onclick="shareContent('<?php echo htmlspecialchars(addslashes($thread['title'])); ?>', 'Check out this discussion on Freaky Quiz Forum!')">🔗 Share</button>
-                <a href="category.php?id=<?php echo $thread['cat_id']; ?>" class="btn-forum">← Back</a>
-            </div>
+            <p style="margin: 0;">Posted in <a href="category.php?id=<?php echo $thread['cat_id']; ?>" style="color: var(--primary-color); font-weight: bold;"><?php echo htmlspecialchars($thread['cat_name']); ?></a></p>
         </div>
 
-        <div class="post-card" style="border-left: 4px solid #0984e3;">
-            <div class="post-header">
-                <div class="post-author">
-                    <img src="<?php echo htmlspecialchars($thread['profile_pic'] ?: $default_pic); ?>" class="post-avatar" alt="avatar">
-                    <div class="post-author-info">
-                        <span class="post-author-name">
-                            <a href="../user_profile.php?id=<?php echo $thread['user_id']; ?>"><?php echo htmlspecialchars($thread['username']); ?></a>
-                        </span>
-                        <span class="post-date"><?php echo date('M j, Y \a\t H:i', strtotime($thread['created_at'])); ?></span>
-                    </div>
-                </div>
-                <div class="post-actions">
-                    <span style="opacity: 0.5; font-size: 0.8rem;">👁 <?php echo $thread['views']; ?> views</span>
-                </div>
+        <div class="intercom-layout">
+            <div class="intercom-sidebar">
+                <div class="intercom-sidebar-title"><?php echo htmlspecialchars($lang['forum_navigation']); ?></div>
+                <a href="category.php?id=<?php echo $thread['cat_id']; ?>" class="intercom-nav-link">← <?php echo htmlspecialchars($thread['cat_name']); ?></a>
+                <a href="index.php" class="intercom-nav-link">🏠 <?php echo htmlspecialchars($lang['forum_all_categories']); ?></a>
+                
+                <?php if ($is_admin == 1 || $is_thread_author): ?>
+                    <div class="intercom-sidebar-title" style="margin-top: 30px;">Manage Thread</div>
+                    <?php if ($is_admin == 1): ?>
+                        <a href="#" class="intercom-nav-link" onclick="event.preventDefault(); modAction('pin', <?php echo $thread_id; ?>, 'thread')"><?php echo $thread['is_pinned'] ? 'Unpin Thread' : '📌 Pin Thread'; ?></a>
+                        <a href="#" class="intercom-nav-link" onclick="event.preventDefault(); modAction('lock', <?php echo $thread_id; ?>, 'thread')"><?php echo $thread['is_locked'] ? 'Unlock Thread' : '🔒 Lock Thread'; ?></a>
+                    <?php endif; ?>
+                    <a href="#" class="intercom-nav-link" style="color: var(--danger);" onclick="event.preventDefault(); modAction('delete_thread', <?php echo $thread_id; ?>, 'thread')">🗑️ Delete Thread</a>
+                <?php endif; ?>
+                
+                <div class="intercom-sidebar-title" style="margin-top: 30px;">Share</div>
+                <button class="btn-forum" style="width: 100%; justify-content: center;" onclick="shareContent('<?php echo htmlspecialchars(addslashes($thread['title'])); ?>', 'Check out this discussion on Freaky Quiz Forum!')">🔗 Share Link</button>
             </div>
-            <div class="post-body"><?php echo nl2br(htmlspecialchars($thread['body'])); ?></div>
-        </div>
+
+            <div class="intercom-main">
+                <div class="glass-panel" style="padding: 0; background: transparent; border: none; box-shadow: none;">
+                    
+                    <div class="post-card" style="border: 2px solid var(--primary-color);">
+                        <div class="post-header">
+                            <div class="post-author">
+                                <img src="<?php echo htmlspecialchars($thread['profile_pic'] ?: $default_pic); ?>" class="post-avatar" alt="avatar">
+                                <div class="post-author-info">
+                                    <span class="post-author-name">
+                                        <a href="../user_profile.php?id=<?php echo $thread['user_id']; ?>"><?php echo htmlspecialchars($thread['username']); ?></a>
+                                    </span>
+                                    <span class="post-date"><?php echo date('M j, Y \a\t H:i', strtotime($thread['created_at'])); ?></span>
+                                </div>
+                            </div>
+                            <div class="post-actions">
+                                <span style="opacity: 0.5; font-size: 0.8rem;">👁 <?php echo $thread['views']; ?> <?php echo htmlspecialchars($lang['forum_views']); ?></span>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            <?php echo nl2br(htmlspecialchars($thread['body'])); ?>
+                            <?php if (!empty($thread['image_url'])): ?>
+                                <br><img src="../<?php echo htmlspecialchars($thread['image_url']); ?>" alt="Thread Image" style="max-width: 100%; border-radius: 10px; margin-top: 15px;">
+                            <?php endif; ?>
+                        </div>
+                    </div>
 
         <?php if (count($posts) > 0): ?>
             <h3 style="color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-bottom: 15px;">💬 Replies (<?php echo count($posts); ?>)</h3>
@@ -159,7 +183,12 @@ $is_thread_author = ($thread['user_id'] == $user_id);
                     </div>
                 </div>
 
-                <div class="post-body" id="post-body-<?php echo $post['id']; ?>"><?php echo nl2br(htmlspecialchars($post['body'])); ?></div>
+                <div class="post-body" id="post-body-<?php echo $post['id']; ?>">
+                    <?php echo nl2br(htmlspecialchars($post['body'])); ?>
+                    <?php if (!empty($post['image_url'])): ?>
+                        <br><img src="../<?php echo htmlspecialchars($post['image_url']); ?>" alt="Reply Image" style="max-width: 100%; border-radius: 10px; margin-top: 15px;">
+                    <?php endif; ?>
+                </div>
 
                 <div class="vote-section">
                     <button class="vote-btn <?php echo ($post['my_vote'] == 1) ? 'active-up' : ''; ?>" onclick="vote(<?php echo $post['id']; ?>, 1)" title="Upvote">▲</button>
@@ -175,13 +204,28 @@ $is_thread_author = ($thread['user_id'] == $user_id);
             </div>
         <?php else: ?>
             <div class="glass-panel reply-form">
-                <h3 style="color: #fff; margin-top: 0;">Reply to this thread</h3>
+                <h3 style="color: #fff; margin-top: 0;"><?php echo htmlspecialchars($lang['forum_reply']); ?></h3>
                 <textarea class="reply-textarea" id="reply-body" placeholder="Write your reply... You can mention users with @username"></textarea>
+                
+                <input type="file" id="forumImageInput" accept="image/*" style="display:none;" onchange="uploadForumImage()">
+                
+                <div style="display: flex; gap: 10px; margin-top: 10px; margin-bottom: 10px;">
+                    <button class="btn-forum" id="forumImageBtn" style="background: #fdcb6e; color: #2d3436;" onclick="document.getElementById('forumImageInput').click()">📎 Attach Image</button>
+                    <button class="btn-forum" style="background: #e84393; color: white;" onclick="document.getElementById('forum-emoji-picker-container').style.display = document.getElementById('forum-emoji-picker-container').style.display === 'none' ? 'block' : 'none'">😊 Emojis</button>
+                </div>
+
+                <div id="forum-emoji-picker-container" style="display: none; margin-bottom: 15px;">
+                    <emoji-picker class="dark"></emoji-picker>
+                </div>
+
                 <div style="margin-top: 12px; display: flex; gap: 10px;">
-                    <button class="btn-forum btn-forum-primary" onclick="submitReply()">📤 Post Reply</button>
+                    <button class="btn-forum btn-forum-primary" onclick="submitReply()">📤 <?php echo htmlspecialchars($lang['forum_post_reply']); ?></button>
                 </div>
             </div>
         <?php endif; ?>
+
+            </div> 
+        </div> 
 
     </div>
     
@@ -202,8 +246,20 @@ $is_thread_author = ($thread['user_id'] == $user_id);
         const threadId = <?php echo $thread_id; ?>;
         const threadAuthorId = <?php echo $thread['user_id']; ?>;
         const currentUserId = <?php echo $user_id; ?>;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const picker = document.querySelector('emoji-picker');
+            if (picker) {
+                picker.addEventListener('emoji-click', event => {
+                    const input = document.getElementById('reply-body');
+                    input.value += event.detail.unicode;
+                    input.focus();
+                });
+            }
+        });
     </script>
     <script src="../js/share.js"></script>
     <script src="js/forum.js?v=<?php echo time(); ?>"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js"></script>
 </body>
 </html>

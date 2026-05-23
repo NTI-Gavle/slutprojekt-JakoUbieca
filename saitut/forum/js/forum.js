@@ -20,17 +20,51 @@ function vote(postId, voteValue) {                         // voting
         });
 }
 
+let pendingForumImageUrl = null;
+
+function uploadForumImage() {
+    const fileInput = document.getElementById('forumImageInput');
+    if (!fileInput || !fileInput.files.length) return;
+    
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('type', 'forum');
+    
+    fetch('../php/upload_image.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            pendingForumImageUrl = data.url;
+            const btn = document.getElementById('forumImageBtn');
+            if(btn) {
+                btn.style.background = '#00b894';
+                btn.innerText = '🖼️ Attached';
+            }
+        } else {
+            alert(data.message || 'Upload failed');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Upload error');
+    });
+}
+
 function submitReply() {
     const body = document.getElementById('reply-body').value.trim();
-    if (!body) {
-        alert('Please write something before posting.');
+    if (!body && !pendingForumImageUrl) {
+        alert('Please write something or attach an image before posting.');
         return;
     }
 
     fetch('php/create_post.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ thread_id: threadId, body: body })
+        body: JSON.stringify({ thread_id: threadId, body: body, image_url: pendingForumImageUrl })
     })
         .then(res => res.json())
         .then(data => {
@@ -103,8 +137,9 @@ function toggleNotifications() {
                     if (n.type === 'mention') icon = '@';
                     if (n.type === 'category_approved') icon = '✅';
                     if (n.type === 'category_rejected') icon = '❌';
+                    if (n.type === 'new_thread') icon = '🔔';
 
-                    const link = n.thread_id ? `thread.php?id=${n.thread_id}` : '#';
+                    const link = n.link ? n.link : (n.thread_id ? `thread.php?id=${n.thread_id}` : '#');
                     dropdown.innerHTML += `<a href="${link}" class="notif-item">${icon} ${escapeHtml(n.message || n.type)}</a>`;
                 });
             }

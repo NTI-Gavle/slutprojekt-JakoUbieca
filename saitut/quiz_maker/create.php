@@ -14,6 +14,7 @@ if (!isset($_SESSION['user_id'])) {
     <title>Quiz Maker</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/maker.css">
+    <link rel="stylesheet" href="../css/global_neon.css">
     <style>
         
         .answer-row input[type="checkbox"] {
@@ -91,10 +92,19 @@ if (!isset($_SESSION['user_id'])) {
 </head>
                                                                         
 
-<body>
+<body class="neon-theme">
     <?php include "../php/lang_ui.php"; ?>
     <?php include "../Rapport/ui.php"; ?>
-    <div class="maker-container">
+
+    <div class="bg-particles">
+        <div class="particle" style="width: 300px; height: 300px; top: 10%; left: 20%;"></div>
+        <div class="particle" style="width: 200px; height: 200px; top: 60%; left: 80%; animation-delay: -5s;"></div>
+        <div class="particle" style="width: 250px; height: 250px; top: 80%; left: 30%; animation-delay: -10s;"></div>
+    </div>
+
+    <div class="neon-container" style="--form-width: 1200px; width: 95vw; max-width: 1200px; height: 95vh; margin: auto;">
+        <div class="neon-glass-box">
+            <div class="maker-container" style="background: transparent; box-shadow: none; width: 100%; max-width: 100%;">
         <h1>🎨 <?php echo htmlspecialchars($lang['quiz_maker_title']); ?></h1>
         
         <form id="quizForm" action="save.php" method="POST">
@@ -115,12 +125,14 @@ if (!isset($_SESSION['user_id'])) {
             <div id="questions-container"></div>
 
             <div style="display: flex; gap: 15px; margin-top: 20px;">
-                <button type="button" class="btn-add" onclick="addQuestion()"><?php echo htmlspecialchars($lang['add_question']); ?></button>
-                <a href="../dashboard.php" style="text-decoration:none; color:black; padding:10px 20px; border:1px solid rgba(255,255,255,0.3); border-radius:50px; font-size: 0.9rem;"><?php echo htmlspecialchars($lang['cancel']); ?></a>
+                <button type="button" class="neon-btn neon-btn-outline" onclick="addQuestion()"><?php echo htmlspecialchars($lang['add_question']); ?></button>
+                <a href="../dashboard.php" class="neon-btn neon-btn-outline" style="border-color: rgba(255,255,255,0.3); color: white;"><?php echo htmlspecialchars($lang['cancel']); ?></a>
             </div>
 
-            <button type="submit" class="btn-submit"><?php echo htmlspecialchars($lang['save_quiz']); ?></button>
+            <button type="submit" class="neon-btn" style="width: 100%; margin-top: 20px; font-size: 1.2rem;"><?php echo htmlspecialchars($lang['save_quiz']); ?></button>
         </form>
+    </div>
+        </div>
     </div>
 
     <script>
@@ -169,8 +181,8 @@ if (!isset($_SESSION['user_id'])) {
                         <span class="label-text" style="margin-top: 25px; display:block;"><?php echo htmlspecialchars($lang['answer_options_label']); ?></span>
                     </div>
                     
-                    <button type="button" class="btn-add" onclick="addAnswer(${questionCount})" 
-                            style="margin-top: 15px; font-size: 0.8rem; padding: 8px 15px;"><?php echo htmlspecialchars($lang['add_new_answer']); ?></button>
+                    <button type="button" class="neon-btn neon-btn-outline" onclick="addAnswer(${questionCount})" 
+                            style="margin-top: 15px; font-size: 0.8rem; padding: 8px 15px; border-width: 1px;"><?php echo htmlspecialchars($lang['add_new_answer']); ?></button>
                 </div>`;
             
             container.insertAdjacentHTML('beforeend', qHtml);

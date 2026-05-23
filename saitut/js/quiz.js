@@ -92,7 +92,7 @@ function displayQuestion() {
 
     startTimer(q.timer);
 
-    questionText.innerText = q.question;
+    questionText.innerHTML = q.question;
     answersList.innerHTML = "";
 
 
@@ -157,7 +157,7 @@ function displayQuestion() {
         q.answers.forEach(a => {
             const answerText = typeof a === "object" ? a.text : a;
             const btn = document.createElement("button");
-            btn.innerText = answerText;
+            btn.innerHTML = answerText;
             btn.className = "answer-btn";
             btn.onclick = () => checkSingleAnswer(answerText, q);
             answersList.appendChild(btn);
@@ -181,33 +181,51 @@ function checkSingleAnswer(selected, q) {
     clearInterval(timerInterval);
 
     const buttons = answersList.querySelectorAll(".answer-btn");
-    const correctAnswer = q.answers.find(a => a.is_correct == 1)?.text || q.correct_answer;
+    buttons.forEach(btn => btn.style.pointerEvents = "none");
 
-    buttons.forEach(btn => {
-        btn.style.pointerEvents = "none";
-        if (btn.innerText === correctAnswer) {
-            btn.style.background = "rgba(40, 167, 69, 0.7)";
-            btn.style.borderColor = "#28a745";
-        } else if (btn.innerText === selected) {
-            btn.style.background = "rgba(220, 53, 69, 0.7)";
-            btn.style.borderColor = "#dc3545";
-            btn.classList.add("shake-horizontal");
-        }
-    });
+    fetch("php/check_answer.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question_id: q.id, selected: selected })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+                return;
+            }
 
-    if (selected === correctAnswer) {
-        correctCount++;
-        Effects.showCorrect();
-        let pointsEarned = (parseInt(q.points_value) || 0) + (timeLeft > 5 ? 5 : 0);
-        totalPoints += pointsEarned;
-        if (scoreDisplay) scoreDisplay.innerText = totalPoints;
-        sendPointsToLobby();
-    } else {
-        wrongCount++;
-        Effects.showWrong();
-    }
+            const correctAnswers = data.correct_answers || [];
 
-    setTimeout(nextQuestion, 1000);
+            buttons.forEach(btn => {
+                if (correctAnswers.includes(btn.innerHTML)) {
+                    btn.style.background = "rgba(40, 167, 69, 0.7)";
+                    btn.style.borderColor = "#28a745";
+                } else if (btn.innerHTML === selected) {
+                    btn.style.background = "rgba(220, 53, 69, 0.7)";
+                    btn.style.borderColor = "#dc3545";
+                    btn.classList.add("shake-horizontal");
+                }
+            });
+
+            if (data.correct) {
+                correctCount++;
+                Effects.showCorrect();
+                let pointsEarned = data.points + (timeLeft > 5 ? 5 : 0);
+                totalPoints += pointsEarned;
+                if (scoreDisplay) scoreDisplay.innerText = totalPoints;
+                sendPointsToLobby();
+            } else {
+                wrongCount++;
+                Effects.showWrong();
+            }
+
+            setTimeout(nextQuestion, 1000);
+        })
+        .catch(err => {
+            console.error("Answer check failed", err);
+            setTimeout(nextQuestion, 1000);
+        });
 }
 
 function checkMultiAnswer(q) {
@@ -215,36 +233,51 @@ function checkMultiAnswer(q) {
 
     const labels = answersList.querySelectorAll(".multi-select-label");
     const checked = [...answersList.querySelectorAll("input:checked")].map(i => i.value);
-    const correctAnswers = q.answers
-        .filter(a => typeof a === "object" && a.is_correct == 1)
-        .map(a => a.text);
 
-    const isCorrect = checked.length === correctAnswers.length && checked.every(a => correctAnswers.includes(a));
+    labels.forEach(lbl => lbl.style.pointerEvents = "none");
 
-    labels.forEach(lbl => {
-        lbl.style.pointerEvents = "none";
-        const val = lbl.querySelector("input").value;
-        if (correctAnswers.includes(val)) {
-            lbl.style.background = "rgba(40, 167, 69, 0.7)";
-        } else if (checked.includes(val)) {
-            lbl.style.background = "rgba(220, 53, 69, 0.7)";
-            lbl.classList.add("shake-horizontal");
-        }
-    });
+    fetch("php/check_answer.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question_id: q.id, selected: checked })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+                return;
+            }
 
-    if (isCorrect) {
-        correctCount++;
-        Effects.showCorrect();
-        let pointsEarned = (parseInt(q.points_value) || 0) + (timeLeft > 5 ? 5 : 0);
-        totalPoints += pointsEarned;
-        if (scoreDisplay) scoreDisplay.innerText = totalPoints;
-        sendPointsToLobby();
-    } else {
-        wrongCount++;
-        Effects.showWrong();
-    }
+            const correctAnswers = data.correct_answers || [];
 
-    setTimeout(nextQuestion, 1200);
+            labels.forEach(lbl => {
+                const val = lbl.querySelector("input").value;
+                if (correctAnswers.includes(val)) {
+                    lbl.style.background = "rgba(40, 167, 69, 0.7)";
+                } else if (checked.includes(val)) {
+                    lbl.style.background = "rgba(220, 53, 69, 0.7)";
+                    lbl.classList.add("shake-horizontal");
+                }
+            });
+
+            if (data.correct) {
+                correctCount++;
+                Effects.showCorrect();
+                let pointsEarned = data.points + (timeLeft > 5 ? 5 : 0);
+                totalPoints += pointsEarned;
+                if (scoreDisplay) scoreDisplay.innerText = totalPoints;
+                sendPointsToLobby();
+            } else {
+                wrongCount++;
+                Effects.showWrong();
+            }
+
+            setTimeout(nextQuestion, 1200);
+        })
+        .catch(err => {
+            console.error("Answer check failed", err);
+            setTimeout(nextQuestion, 1200);
+        });
 }
 
 function nextQuestion() {
@@ -289,7 +322,7 @@ function finishQuiz() {
             }
 
             quizContainer.innerHTML = `
-            <h1 style="animation: slideInUp 0.5s">🏁 Finish</h1>
+            <h1 style="animation: slideInUp 0.5s">Finish</h1>
             <p><b>${totalPoints}</b> total points</p>
             <p>✔ ${correctCount} correct | ❌ ${wrongCount} wrong</p>
             ${statHTML}
@@ -298,18 +331,14 @@ function finishQuiz() {
             Effects.showVictory(Math.round(successPercent));
         })
         .catch(err => {
-            console.warn("Offline! Saving score locally.", err);
-            let offlineScores = JSON.parse(localStorage.getItem('freaky_offline_scores') || '[]');
-            offlineScores.push({ points: totalPoints, correct: correctCount, wrong: wrongCount, quizId: quizId, timestamp: Date.now() });
-            localStorage.setItem('freaky_offline_scores', JSON.stringify(offlineScores));
-
+            console.error("Error saving the result:", err);
             quizContainer.innerHTML = `
-            <h1 style="animation: slideInUp 0.5s">🏁 Finish (Offline)</h1>
-            <p><b>${totalPoints}</b> total points</p>
-            <p>✔ ${correctCount} correct | ❌ ${wrongCount} wrong</p>
-            <p style="color: #ffcc00; font-weight: bold; margin-top: 15px;">⚠️ You are offline! Result saved locally and will sync when internet is back.</p>
-            <a href="dashboard.php"><button class="confirm-btn" style="width: auto; padding: 10px 40px;">Exit</button></a>
-        `;
+                <h1 style="animation: slideInUp 0.5s"> Finish</h1>
+                <p><b>${totalPoints}</b> total points</p>
+                <p>✔ ${correctCount} correct | ❌ ${wrongCount} wrong</p>
+                <p style="color: #ffcc00; font-weight: bold; margin-top: 15px;">Unable to save the result. Please check your connection.</p>
+                <a href="dashboard.php"><button class="confirm-btn" style="width: auto; padding: 10px 40px;">Exit</button></a>
+            `;
             Effects.showVictory(Math.round(successPercent));
         });
 }

@@ -1,11 +1,7 @@
 <?php
-session_start();
-include "../php/db.php";
-
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit;
-}
+header("Location: ../admin/panel.php");
+exit;
+?>
 
 $user_id = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT is_admin FROM users WHERE id = ?");
@@ -30,7 +26,7 @@ $reports = [];                                                                  
 $rp_sql = "SELECT fr.*, u.username AS reporter, fp.body AS post_body, fp.thread_id,
     ft.title AS thread_title
     FROM forum_reports fr
-    JOIN users u ON fr.reporter_id = u.id
+    JOIN users u ON fr.user_id = u.id
     JOIN forum_posts fp ON fr.post_id = fp.id
     JOIN forum_threads ft ON fp.thread_id = ft.id
     WHERE fr.status = 'pending'

@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
   
     if ($action === 'get_friends') {
         $stmt = $conn->prepare("
-            SELECT f.id as friendship_id, u.id as user_id, u.username, u.profile_pic 
+            SELECT f.id as friendship_id, u.id as user_id, u.username, u.profile_pic, u.status 
             FROM friendships f 
             JOIN users u ON (f.user_id = u.id OR f.friend_id = u.id) 
             WHERE (f.user_id = ? OR f.friend_id = ?) 

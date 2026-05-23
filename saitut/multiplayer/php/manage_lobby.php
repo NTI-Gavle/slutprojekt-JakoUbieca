@@ -22,6 +22,8 @@ if ($action === 'get_players') {
     while($row = $result->fetch_assoc()) {
         $players[] = $row;
     }
+    include_once "../../php/sanitize.php";
+    sanitize_array($players);
     echo json_encode($players);
 }
 

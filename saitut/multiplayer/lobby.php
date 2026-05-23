@@ -14,26 +14,33 @@ if (!isset($_SESSION['user_id'])) {
     <title>Quiz Master - Multiplayer Lobby</title>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/multiplayer.css?v=1.0">
+    <link rel="stylesheet" href="../css/global_neon.css">
 </head>
-<body>
+<body class="neon-theme">
 
 <?php include "../php/lang_ui.php"; ?>
 <?php include "../Rapport/ui.php"; ?>
 
-<div class="sky-bg"></div>
+<div class="bg-particles">
+    <div class="particle" style="width: 300px; height: 300px; top: 10%; left: 20%;"></div>
+    <div class="particle" style="width: 200px; height: 200px; top: 60%; left: 80%; animation-delay: -5s;"></div>
+    <div class="particle" style="width: 250px; height: 250px; top: 80%; left: 30%; animation-delay: -10s;"></div>
+</div>
 
-<div class="lobby-wrapper">
-    <div class="header-nav">
+<div class="neon-container" style="--form-width: 900px; margin: auto;">
+    <div class="neon-glass-box">
+        <div class="lobby-wrapper" style="background: transparent; box-shadow: none;">
+            <div class="header-nav">
         <h1>⚔️ <?php echo htmlspecialchars($lang['multiplayer_lobby']); ?></h1>
         <a href="../dashboard.php" class="back-link"><?php echo htmlspecialchars($lang['main_menu']); ?></a>
     </div>
 
     <div class="main-layout">
-        <div class="glass-card" id="host-section">
+        <div class="glass-card" id="host-section" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,102,0,0.2);">
             <h2>Host</h2>
             <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 20px;">Create your lobby and invite friends.</p>
             
-            <button id="btn-create-lobby">Create new game</button>
+            <button id="btn-create-lobby" class="neon-btn">Create new game</button>
             
             <div id="active-lobby" style="display:none; flex-direction: column; flex-grow: 1; margin-top: 20px;">
                 <div style="text-align: center; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 20px; border: 1px dashed var(--accent);">
@@ -52,17 +59,17 @@ if (!isset($_SESSION['user_id'])) {
                     <ul id="approved-players-list" style="list-style: none; padding: 0;"></ul>
                 </div>
                 
-                <button id="btn-start-game" class="confirm-btn" disabled>Start Quiz</button>
+                <button id="btn-start-game" class="neon-btn" disabled>Start Quiz</button>
             </div>
         </div>
 
-        <div class="glass-card" id="join-section">
+        <div class="glass-card" id="join-section" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,102,0,0.2);">
             <h2><?php echo htmlspecialchars($lang['join']); ?></h2>
             <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 20px;">Enter the code and wait for approval.</p>
             
             <div style="display: flex; flex-direction: column; justify-content: center; flex-grow: 1;">
-                <input type="text" id="input-lobby-code" placeholder="Enter code" maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 3px;">
-                <button id="btn-join-lobby">Join the lobby</button>
+                <input type="text" id="input-lobby-code" class="neon-input" placeholder="Enter code" maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 3px; margin-bottom: 15px;">
+                <button id="btn-join-lobby" class="neon-btn">Join the lobby</button>
                 <div id="join-status" style="margin-top: 20px; text-align: center; font-weight: 600;"></div>
             </div>
 
@@ -70,6 +77,8 @@ if (!isset($_SESSION['user_id'])) {
                 💡 <b>Note:</b> The quiz starts at the host's discretion.
             </div>
         </div>
+    </div>
+</div>
     </div>
 </div>
 

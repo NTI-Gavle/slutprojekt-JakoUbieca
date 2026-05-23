@@ -38,151 +38,179 @@ $quizzes_result = $stmt_q->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn-icons-png.flaticon.com https://*.fbcdn.net;">
-    <title>Quiz Master - Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https://cdn-icons-png.flaticon.com https://*.fbcdn.net;">
+    <title>Freaky Quiz - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/dashboard_neon.css?v=<?php echo time(); ?>">
     <link rel="manifest" href="PWA/manifest.json">
-    <meta name="theme-color" content="#0d6efd">
+    <meta name="theme-color" content="#FF6600">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 </head>
 <body>
 
-    <button id="pwa-install-btn" onclick="promptInstall()" style="display:none;position:fixed;bottom:20px;right:20px;z-index:9999;padding:12px 20px;background:linear-gradient(135deg,#0d6efd,#6610f2);color:#fff;border:none;border-radius:25px;font-size:0.95rem;font-family:Montserrat,sans-serif;cursor:pointer;box-shadow:0 4px 20px rgba(13,110,253,0.5);align-items:center;gap:8px;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-        📲 Install App
-    </button>
-
-    <div id="pwa-offline-toast" style="display:flex;align-items:center;gap:10px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;background:rgba(30,30,30,0.92);backdrop-filter:blur(10px);color:#fff;padding:12px 24px;border-radius:20px;font-family:Montserrat,sans-serif;font-size:0.9rem;box-shadow:0 4px 20px rgba(0,0,0,0.4);border:1px solid rgba(255,100,100,0.4);opacity:0;pointer-events:none;transition:opacity 0.4s;">
-        ⚠️ No internet connection
-    </div>
-
-    <div class="sky-bg"></div>
-    <div class="grass-floor">
-        <?php for($i=0; $i<100; $i++): ?>
-            <div class="blade" style="left: <?php echo ($i); ?>%; height: <?php echo rand(60, 120); ?>px; animation-delay: <?php echo rand(0, 40)/10; ?>s;"></div>
-        <?php endfor; ?>
-    </div>
+    <canvas id="bg-canvas"></canvas>
 
     <?php include "php/lang_ui.php"; ?>
     <?php include "Rapport/ui.php"; ?>
 
-    <div class="dashboard-container">
+    <div class="dashboard-layout">
         
-        <div class="tile tile-home" onclick="switchSection('main')">
-            <span class="icon-lg">🏠</span>
-            <small><?php echo htmlspecialchars($lang['home']); ?></small>
-        </div>
+        <nav class="sidebar-left glass-panel">
+            <div class="logo-container">
+                <h1>FREAKY QUIZ</h1>
+            </div>
+            <div class="nav-menu">
+                <a class="nav-item" onclick="openPopup('user-search')">
+                    <span class="icon">🔍</span>
+                    <span><?php echo htmlspecialchars($lang['search']); ?></span>
+                </a>
+                <a class="nav-item" onclick="openPopup('requests')">
+                    <span class="icon">📩</span>
+                    <span><?php echo htmlspecialchars($lang['requests']); ?></span>
+                </a>
 
-        <div class="tile tile-user-profile" onclick="window.location='profile.php'">
-            <img src="<?php echo htmlspecialchars($display_pic); ?>" alt="User">
-            <small class="mt-5"><?php echo htmlspecialchars($username); ?></small>
-        </div>
-
-        <div class="tile tile-chat" onclick="switchSection('chat')">
-            <span>💬</span>
-            <small><?php echo htmlspecialchars($lang['chat']); ?></small>
-        </div>
-
-        <div class="tile tile-search" onclick="switchSection('user-search')">
-            <span>🔍</span>
-            <small><?php echo htmlspecialchars($lang['search']); ?></small>
-        </div>
-
-        <div class="tile tile-leaderboard">
-            <h4 class="leaderboard-title"><?php echo htmlspecialchars($lang['top_10']); ?></h4>
-            <div id="leaderboard-list"></div>
-        </div>
-
-        <div class="tile tile-requests-small" onclick="switchSection('requests')">
-            <span>📩</span>
-            <small><?php echo htmlspecialchars($lang['requests']); ?></small>
-        </div>
-
-        <div class="tile tile-logout" onclick="window.location='logout.php'">
-            <span>🚪</span>
-            <small><?php echo htmlspecialchars($lang['logout']); ?></small>
-        </div>
-
-        <div class="tile tile-main" id="main-island">
-            
-            <div class="mode-selection-container">
-                <a href="multiplayer/lobby.php" class="mode-island">
-                    <span class="icon-xl">⚔️</span>
-                    <b class="mode-title"><?php echo htmlspecialchars($lang['multiplayer_mode']); ?></b>
+                <a class="nav-item" href="hub.php">
+                    <span class="icon">🌌</span>
+                    <span><?php echo htmlspecialchars($lang['hub_nav']); ?></span>
+                </a>
+                <a class="nav-item" href="logout.php">
+                    <span class="icon">🚪</span>
+                    <span><?php echo htmlspecialchars($lang['logout']); ?></span>
                 </a>
             </div>
+        </nav>
 
-            <div class="main-content-scrollable">
-                <div id="section-main" class="content-section active-section">
-                    <h1><?php echo htmlspecialchars($lang['available_quizzes']); ?></h1>
-                    <input type="text" id="quizSearch" class="quiz-search-bar" placeholder="<?php echo htmlspecialchars($lang['search_quiz_placeholder']); ?>" onkeyup="filterQuizzes()">
+        <main class="main-area">
+
+            <header class="top-hud glass-panel">
+                <div class="hud-user">
+                    <img src="<?php echo htmlspecialchars($display_pic); ?>" alt="Avatar" class="avatar">
+                    <div class="user-info">
+                        <h2><?php echo htmlspecialchars($username); ?></h2>
+                        <p>Status: Online</p>
+                    </div>
+                </div>
+                <div class="hud-stats">
+
+                </div>
+            </header>
+
+            <section class="content-wrapper" id="central-wrapper" style="position: relative;">
+                
+                <canvas id="brain-canvas"></canvas>
+
+                <div id="liquid-glass-popup" class="liquid-glass-panel" style="display: none;">
+                    <button class="btn-close-popup" onclick="closePopup()">✖</button>                           
                     
-                    <div id="quiz-list-container">
-                        <?php while($quiz = $quizzes_result->fetch_assoc()): ?>
-                        <div class="quiz-card quiz-card-styled">
-                            <div>
-                                <b class="quiz-title quiz-title-styled"><?php echo htmlspecialchars($quiz['title']); ?></b>
-                                <small class="quiz-author"><?php echo htmlspecialchars($lang['author']); ?> <?php echo htmlspecialchars($quiz['author']); ?></small>
+                    <div class="popup-scroll-area"> 
+                        <div id="section-main" class="content-section">      
+                            <h2 style="margin-bottom: 20px; color: var(--neon-orange);"><?php echo htmlspecialchars($lang['available_quizzes']); ?></h2>
+                            <input type="text" id="quizSearch" class="search-box-large" placeholder="<?php echo htmlspecialchars($lang['search_quiz_placeholder']); ?>" onkeyup="filterQuizzes()">
+                            
+                            <div id="quiz-list-container" class="quiz-grid">
+                                <?php while($quiz = $quizzes_result->fetch_assoc()): ?>
+                                <div class="quiz-card-glass quiz-card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.3">
+                                    <div class="quiz-card-content">
+                                        <div class="quiz-card-title"><?php echo htmlspecialchars($quiz['title']); ?></div>
+                                        <div class="quiz-card-author"><?php echo htmlspecialchars($lang['author']); ?> <?php echo htmlspecialchars($quiz['author']); ?></div>
+                                    </div>
+                                    <div class="quiz-card-actions">
+                                        <button onclick="shareContent('<?php echo htmlspecialchars(addslashes($quiz['title'])); ?>', 'Play this awesome quiz!', '<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/quiz.php?id=' . (int)$quiz['id']; ?>')" style="background: transparent; border: none; font-size: 1.2rem; cursor: pointer;" title="<?php echo htmlspecialchars($lang['share'] ?? 'Share'); ?>">🔗</button>
+                                        <a href="quiz.php?id=<?php echo (int)$quiz['id']; ?>" class="btn-play"><?php echo htmlspecialchars($lang['play']); ?></a>
+                                    </div>
+                                </div>
+                                <?php endwhile; ?>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <button onclick="shareContent('<?php echo htmlspecialchars(addslashes($quiz['title'])); ?>', 'Play this awesome quiz!', '<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/quiz.php?id=' . (int)$quiz['id']; ?>')" style="background: transparent; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" title="<?php echo htmlspecialchars($lang['share'] ?? 'Share'); ?>">🔗</button>
-                                <a href="quiz.php?id=<?php echo (int)$quiz['id']; ?>" class="btn-play"><?php echo htmlspecialchars($lang['play']); ?></a>
+                        </div>
+ 
+                        <div id="section-multiplayer" class="content-section">      
+                            <h2 style="margin-bottom: 20px; color: var(--neon-orange);">Multiplayer Lobby</h2>
+                            <div style="text-align: center; margin-top: 40px;">
+                                <a href="multiplayer/lobby.php" style="display: inline-block; padding: 15px 40px; font-size: 1.2rem; background: var(--neon-orange); color: #000; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 0 20px var(--neon-orange); transition: all 0.3s ease;">
+                                    🚀 Go to Multiplayer Lobby
+                                </a>
                             </div>
                         </div>
-                        <?php endwhile; ?>
-                    </div>
-                </div>
 
-                <div id="section-user-search" class="content-section">
-                    <h1><?php echo htmlspecialchars($lang['find_friends']); ?></h1>
-                    <input type="text" id="mainUserSearch" class="search-box-large" placeholder="<?php echo htmlspecialchars($lang['search_name_placeholder']); ?>">
-                    <div id="mainSearchResults" class="mt-20"></div>
-                </div>
-
-                <div id="section-chat" class="content-section">
-                    <h1><?php echo htmlspecialchars($lang['chat_title']); ?></h1>
-                    <div class="chat-container">
-                        <div id="chat-friends-list" class="chat-friends-list-styled">
-                            <p class="loading-text"><?php echo htmlspecialchars($lang['loading']); ?></p>
+                        <div id="section-third" class="content-section">
+                            <h2 style="margin-bottom: 20px; color: var(--neon-orange);">Create quiz</h2>
+                            <p style="color: var(--text-secondary); text-align: center; margin-bottom: 30px;">Create quiz here.</p>
+                            <div style="text-align: center; margin-top: 20px;">
+                                <a href="quiz_maker/create.php" style="display: inline-block; padding: 15px 40px; font-size: 1.2rem; background: var(--neon-orange); color: #000; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 0 20px var(--neon-orange); transition: all 0.3s ease;">
+                                    📝 Create a Quiz
+                                </a>
+                            </div>
                         </div>
-                        <div id="chat-window" class="chat-window-styled">
-                            <p class="empty-chat-msg"><?php echo htmlspecialchars($lang['choose_friend_chat']); ?></p>
+
+                        <div id="section-user-search" class="content-section">
+                            <h2 style="margin-bottom: 20px; color: var(--neon-orange);"><?php echo htmlspecialchars($lang['find_friends']); ?></h2>
+                            <input type="text" id="mainUserSearch" class="search-box-large" placeholder="<?php echo htmlspecialchars($lang['search_name_placeholder']); ?>">
+                            <div id="mainSearchResults"></div>
+                        </div>
+
+                        <div id="section-requests" class="content-section">
+                            <h2 style="margin-bottom: 20px; color: var(--neon-orange);"><?php echo htmlspecialchars($lang['friend_requests_title']); ?></h2>
+                            <div id="friend-requests-list">
+                                <p style="color: var(--text-secondary);"><?php echo htmlspecialchars($lang['no_new_requests']); ?></p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="section-requests" class="content-section">
-                    <h1><?php echo htmlspecialchars($lang['friend_requests_title']); ?></h1>
-                    <div id="friend-requests-list">
-                        <p><?php echo htmlspecialchars($lang['no_new_requests']); ?></p>
-                    </div>
-                </div>
+            </section>
+        </main>
+
+        <aside class="sidebar-right glass-panel">
+            <h3 class="leaderboard-header"><?php echo htmlspecialchars($lang['top_users']); ?></h3>
+            <div id="leaderboard-list">
             </div>
-        </div>
+        </aside>
 
     </div>
 
-    <script>
-        let currentChatId = null;
-        let chatInterval = null;
 
+    <script src="js/dashboard_neon.js?v=<?php echo time(); ?>"></script>
+    <script src="js/dashboard_brain.js?v=<?php echo time(); ?>"></script>
+    <script>
+        function openPopup(sectionId) {
+            document.getElementById('liquid-glass-popup').style.display = 'block';
+            document.getElementById('liquid-glass-popup').classList.add('popup-open');
+            
+            const scrollArea = document.querySelector('.popup-scroll-area');
+            if (scrollArea) scrollArea.scrollTop = 0;         // like a check for reset scroll position so it doesnt appear pushed down look a like from a previous scroll
+            
+            switchSection(sectionId);
+        }
+
+        function closePopup() {
+            document.getElementById('liquid-glass-popup').style.display = 'none';
+            document.getElementById('liquid-glass-popup').classList.remove('popup-open');
+            
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        }
         function filterQuizzes() {
             let input = document.getElementById('quizSearch').value.toLowerCase();
-            let cards = document.getElementsByClassName('quiz-card');
+            let cards = document.getElementsByClassName('quiz-card-glass');
             for (let i = 0; i < cards.length; i++) {
-                let title = cards[i].querySelector('.quiz-title').innerText.toLowerCase();
+                let title = cards[i].querySelector('.quiz-card-title').innerText.toLowerCase();
                 cards[i].style.display = title.includes(input) ? "flex" : "none";
             }
         }
 
         function switchSection(sectionId) {                   
-            clearInterval(chatInterval);
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active-section'));
             document.getElementById('section-' + sectionId).classList.add('active-section');
+            
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); 
+            const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(n => n.getAttribute('onclick') === `openPopup('${sectionId}')`);
+            if (activeNav) activeNav.classList.add('active');
+
             if(sectionId === 'requests') loadFriendRequests();
-            if(sectionId === 'chat') loadChatFriends();
         }
 
         function loadLeaderboard() {
@@ -191,10 +219,11 @@ $quizzes_result = $stmt_q->get_result();
                 .then(data => {
                     const list = document.getElementById('leaderboard-list');
                     list.innerHTML = '';
-                    data.forEach((user, index) => {
+                    const topUsers = data.slice(0, 5);
+                    topUsers.forEach((user, index) => {
                         const div = document.createElement('div');
                         div.className = 'leader-item';
-                        div.innerHTML = `<span>${index + 1}. ${document.createTextNode(user.username).textContent}</span><span>${user.points} <?php echo htmlspecialchars($lang['pts']); ?></span>`;
+                        div.innerHTML = `<span>#${index + 1} ${document.createTextNode(user.username).textContent}</span><span>${user.points} pts</span>`;
                         list.appendChild(div);
                     });
                 });
@@ -210,8 +239,8 @@ $quizzes_result = $stmt_q->get_result();
                     results.innerHTML = '';
                     users.forEach(u => {
                         const div = document.createElement('div');
-                        div.className = 'user-result-item';             // clickeble user search
-                        div.innerHTML = `<a href="user_profile.php?id=${u.id}" style="text-decoration: none; color: inherit; font-weight: bold; display: block; width: 100%; padding: 5px 0;" class="search-profile-link">${document.createTextNode(u.username).textContent}</a>`;
+                        div.className = 'user-result-item glass-panel';
+                        div.innerHTML = `<a href="user_profile.php?id=${u.id}" style="text-decoration: none; color: white; font-weight: bold; width: 100%;">${document.createTextNode(u.username).textContent}</a>`;
                         results.appendChild(div);
                     });
                 });
@@ -230,15 +259,15 @@ $quizzes_result = $stmt_q->get_result();
                 .then(res => res.json())
                 .then(data => {
                     const list = document.getElementById('friend-requests-list');
-                    if(data.length === 0) { list.innerHTML = '<p><?php echo htmlspecialchars($lang['everything_reviewed']); ?></p>'; return; }
+                    if(data.length === 0) { list.innerHTML = '<p style="color: var(--text-secondary);"><?php echo htmlspecialchars($lang['everything_reviewed'] ?? 'No requests'); ?></p>'; return; }
                     list.innerHTML = '';
                     data.forEach(req => {
                         const div = document.createElement('div');
-                        div.className = 'user-result-item';
+                        div.className = 'user-result-item glass-panel';
                         div.innerHTML = `<span>${document.createTextNode(req.username).textContent}</span>
-                            <div>
-                                <button onclick="respondRequest(${req.request_id}, 'accept')" class="btn-friend btn-accept"><?php echo htmlspecialchars($lang['accept']); ?></button>
-                                <button onclick="respondRequest(${req.request_id}, 'decline')" class="btn-friend btn-decline"><?php echo htmlspecialchars($lang['decline']); ?></button>
+                            <div style="display:flex; gap:10px;">
+                                <button onclick="respondRequest(${req.request_id}, 'accept')" class="btn-friend btn-accept"><?php echo htmlspecialchars($lang['accept'] ?? 'Accept'); ?></button>
+                                <button onclick="respondRequest(${req.request_id}, 'decline')" class="btn-friend btn-decline"><?php echo htmlspecialchars($lang['decline'] ?? 'Decline'); ?></button>
                             </div>`;
                         list.appendChild(div);
                     });
@@ -253,84 +282,9 @@ $quizzes_result = $stmt_q->get_result();
             }).then(() => loadFriendRequests());
         }
 
-        function loadChatFriends() {
-            fetch('php/manage_friends.php?action=get_friends')
-                .then(res => res.json())
-                .then(data => {
-                    const list = document.getElementById('chat-friends-list');
-                    if (data.length === 0) { list.innerHTML = '<p class="empty-msg"><?php echo htmlspecialchars($lang['no_friends_yet']); ?></p>'; return; }
-                    list.innerHTML = '';
-                    data.forEach(f => {
-                        const div = document.createElement('div');
-                        div.className = "friend-item";
-                        div.onclick = () => openChat(f.user_id, f.username);
-                        div.innerHTML = `<div class="friend-avatar">${f.username[0].toUpperCase()}</div>
-                                         <span class="friend-name-styled">${document.createTextNode(f.username).textContent}</span>`;
-                        list.appendChild(div);
-                    });
-                });
-        }
-
-        function openChat(friendId, friendName) {                   
-            currentChatId = friendId;
-            const chatWindow = document.getElementById('chat-window');
-            chatWindow.innerHTML = `
-                <h3 class="chat-header"><?php echo htmlspecialchars($lang['chat_with']); ?> ${document.createTextNode(friendName).textContent}</h3>
-                <div id="messages-container" class="messages-container-styled"></div>
-                <div class="chat-input-area">
-                    <input type="text" id="chatInput" class="search-box-large chat-input-styled" placeholder="<?php echo htmlspecialchars($lang['write_message_placeholder']); ?>" onkeypress="if(event.key==='Enter') sendMessage()">
-                    <button onclick="sendMessage()" class="btn-send">🚀</button>
-                </div>`;
-            loadMessages();
-            clearInterval(chatInterval);
-            chatInterval = setInterval(loadMessages, 3000);
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const msg = input.value.trim();
-            if (!msg || !currentChatId) return;
-            fetch('php/manage_chat.php', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ action: 'send', friend_id: currentChatId, message: msg })
-            }).then(() => { input.value = ''; loadMessages(); });
-        }
-
-        function loadMessages() {
-            if (!currentChatId) return;
-            fetch(`php/manage_chat.php?action=get&friend_id=${currentChatId}`)
-                .then(res => res.json())
-                .then(data => {
-                    const container = document.getElementById('messages-container');
-                    if (!container) return;
-                    container.innerHTML = '';
-                    data.forEach(m => {
-                        const isMe = m.sender_id == <?php echo $user_id; ?>;
-                        const div = document.createElement('div');
-                        div.className = `msg ${isMe ? 'msg-me' : 'msg-them'}`;
-                        div.textContent = m.message;
-                        container.appendChild(div);
-                    });
-                    container.scrollTop = container.scrollHeight;
-                });
-        }
-
         document.addEventListener('DOMContentLoaded', loadLeaderboard);
-
-        document.querySelectorAll('.tile').forEach(tile => {
-            tile.addEventListener('mousemove', e => {
-                const rect = tile.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const rY = ((x / rect.width) - 0.5) * 10;
-                const rX = ((y / rect.height) - 0.5) * -10;
-                tile.style.transform = `perspective(1000px) scale(1.02) rotateX(${rX}deg) rotateY(${rY}deg)`;
-            });
-            tile.addEventListener('mouseleave', () => tile.style.transform = `perspective(1000px) scale(1) rotateX(0) rotateY(0)`);
-        });
     </script>
     <script src="js/share.js"></script>
-    <script src="js/pwa.js"></script>
+    <?php include_once __DIR__ . "/Rapport/ui.php"; ?>
 </body>
 </html>

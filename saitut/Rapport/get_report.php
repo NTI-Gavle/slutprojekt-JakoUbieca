@@ -34,5 +34,9 @@ while($r = $m_res->fetch_assoc()){
     $msgs[] = $r;
 }
 
+include_once "../php/sanitize.php";
+sanitize_array($report);
+sanitize_array($msgs);
+
 echo json_encode(['success' => true, 'report' => $report, 'messages' => $msgs, 'current_user' => $user_id]);
 ?>
