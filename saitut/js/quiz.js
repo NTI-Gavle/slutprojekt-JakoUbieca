@@ -35,20 +35,24 @@ timerDisplay.id = "timer-display";
 questionText.before(timerDisplay);
 
 
-fetch(`php/get_questions.php?quiz_id=${quizId}&t=${Date.now()}`)
+fetch(`php/get_questions.php?quiz_id=${quizId}`)
     .then(res => res.json())
     .then(data => {
         questions = data;
         if (questions.length > 0) displayQuestion();
-        else questionText.innerText = "There are no questions available for this quiz.";
+        else questionText.innerText = "This quiz is not available offline or has no questions.";
+    })
+    .catch(err => {
+        questionText.innerText = "No connection and the quiz is not cached for offline play.";
+        console.error("Offline error:", err);
     });
 
 
 function startTimer(seconds) {
     clearInterval(timerInterval);
-    
+
     timeLeft = (seconds && parseInt(seconds) > 0) ? parseInt(seconds) : 30;
-    
+
     timerDisplay.innerText = `⏱️ ${timeLeft}s`;
     timerDisplay.classList.remove("warning");
 
@@ -63,7 +67,7 @@ function startTimer(seconds) {
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             wrongCount++;
-            Effects.showWrong(); 
+            Effects.showWrong();
             nextQuestion();
         }
     }, 1000);
@@ -87,11 +91,11 @@ function displayQuestion() {
     console.log("Time for question " + (currentQuestionIndex + 1) + ":", q.timer);
 
     startTimer(q.timer);
-    
+
     questionText.innerText = q.question;
     answersList.innerHTML = "";
-    
-    
+
+
     if (mediaContainer) {
         mediaContainer.innerHTML = "";                                  // Denna sektion bearbetar multimedieinnehållet i frågan dynamiskt: först kontrollerar den om URLadressen kommer från YouTube 
         if (q.media_url && q.media_url.trim() !== "" && q.media_url !== "null") {                  // för att integrera en videospelare, och om så inte är fallet försöker den ladda en standardvideo eller växlar automatiskt till en bild vid fel.
@@ -113,8 +117,8 @@ function displayQuestion() {
                         </video>
                     </div>`;
                 const videoElem = document.getElementById('generic-video');
-                if(videoElem) {
-                    videoElem.onerror = function() {
+                if (videoElem) {
+                    videoElem.onerror = function () {
                         mediaContainer.innerHTML = `<img src="${url}" style="max-width:100%; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">`;
                     };
                 }
@@ -122,27 +126,27 @@ function displayQuestion() {
         }
     }
 
-    
+
     if (q.multiple_correct == 1) {
         q.answers.forEach(a => {
             const answerText = typeof a === "object" ? a.text : a;
             const label = document.createElement("label");
-            label.className = "answer-btn multi-select-label"; 
+            label.className = "answer-btn multi-select-label";
 
             label.innerHTML = `
                 <input type="checkbox" value="${answerText}" style="display:none;">
                 <span>${answerText}</span>
             `;
 
-            label.onclick = function(e) {
-                e.preventDefault(); 
+            label.onclick = function (e) {
+                e.preventDefault();
                 const checkbox = this.querySelector('input');
-                checkbox.checked = !checkbox.checked; 
+                checkbox.checked = !checkbox.checked;
                 this.classList.toggle("selected", checkbox.checked);
             };
             answersList.appendChild(label);                             // Denna paragraf genererar svarssnittet och skiljer mellan två lägen: 
         });                                                            // 1) Multival med kryssrutor och bekräftelseknapp, om frågan tillåter mer än ett rätt svar.
-                                                                       // 2) Standardknappar med omedelbar kontroll vid klick för frågor med ett enda möjligt svar.
+        // 2) Standardknappar med omedelbar kontroll vid klick för frågor med ett enda möjligt svar.
         const confirmBtn = document.createElement("button");
         confirmBtn.innerText = "Confirm";
         confirmBtn.className = "confirm-btn";
@@ -180,7 +184,7 @@ function checkSingleAnswer(selected, q) {
     const correctAnswer = q.answers.find(a => a.is_correct == 1)?.text || q.correct_answer;
 
     buttons.forEach(btn => {
-        btn.style.pointerEvents = "none"; 
+        btn.style.pointerEvents = "none";
         if (btn.innerText === correctAnswer) {
             btn.style.background = "rgba(40, 167, 69, 0.7)";
             btn.style.borderColor = "#28a745";
@@ -193,17 +197,17 @@ function checkSingleAnswer(selected, q) {
 
     if (selected === correctAnswer) {
         correctCount++;
-        Effects.showCorrect(); 
+        Effects.showCorrect();
         let pointsEarned = (parseInt(q.points_value) || 0) + (timeLeft > 5 ? 5 : 0);
         totalPoints += pointsEarned;
         if (scoreDisplay) scoreDisplay.innerText = totalPoints;
         sendPointsToLobby();
     } else {
         wrongCount++;
-        Effects.showWrong(); 
+        Effects.showWrong();
     }
 
-    setTimeout(nextQuestion, 1000); 
+    setTimeout(nextQuestion, 1000);
 }
 
 function checkMultiAnswer(q) {
@@ -230,14 +234,14 @@ function checkMultiAnswer(q) {
 
     if (isCorrect) {
         correctCount++;
-        Effects.showCorrect(); 
+        Effects.showCorrect();
         let pointsEarned = (parseInt(q.points_value) || 0) + (timeLeft > 5 ? 5 : 0);
         totalPoints += pointsEarned;
         if (scoreDisplay) scoreDisplay.innerText = totalPoints;
         sendPointsToLobby();
     } else {
         wrongCount++;
-        Effects.showWrong(); 
+        Effects.showWrong();
     }
 
     setTimeout(nextQuestion, 1200);
@@ -260,7 +264,7 @@ function finishQuiz() {
     answersList.innerHTML = "";
     timerDisplay.innerText = "Saving the result...";
 
-    
+
     let successPercent = (correctCount / questions.length) * 100;
 
     fetch("php/save_score.php", {
@@ -272,26 +276,42 @@ function finishQuiz() {
             wrong: wrongCount
         })
     })
-    .then(res => res.json())
-    .then(data => {
-        let statHTML = "";
-        if (data.percentile !== undefined) {
-            statHTML = `<p style="margin-top: 15px; color: #ffcc00; font-weight: bold;">
+        .then(res => {
+            if (!res.ok) throw new Error("Network response was not ok");
+            return res.json();
+        })
+        .then(data => {
+            let statHTML = "";
+            if (data.percentile !== undefined) {
+                statHTML = `<p style="margin-top: 15px; color: #ffcc00; font-weight: bold;">
                 🏆 You are better than ${data.percentile}% from the players!
             </p>`;
-        }
+            }
 
-        quizContainer.innerHTML = `
+            quizContainer.innerHTML = `
             <h1 style="animation: slideInUp 0.5s">🏁 Finish</h1>
             <p><b>${totalPoints}</b> total points</p>
             <p>✔ ${correctCount} correct | ❌ ${wrongCount} wrong</p>
             ${statHTML}
             <a href="dashboard.php"><button class="confirm-btn" style="width: auto; padding: 10px 40px;">Exit</button></a>
         `;
+            Effects.showVictory(Math.round(successPercent));
+        })
+        .catch(err => {
+            console.warn("Offline! Saving score locally.", err);
+            let offlineScores = JSON.parse(localStorage.getItem('freaky_offline_scores') || '[]');
+            offlineScores.push({ points: totalPoints, correct: correctCount, wrong: wrongCount, quizId: quizId, timestamp: Date.now() });
+            localStorage.setItem('freaky_offline_scores', JSON.stringify(offlineScores));
 
-        
-        Effects.showVictory(Math.round(successPercent));
-    });
+            quizContainer.innerHTML = `
+            <h1 style="animation: slideInUp 0.5s">🏁 Finish (Offline)</h1>
+            <p><b>${totalPoints}</b> total points</p>
+            <p>✔ ${correctCount} correct | ❌ ${wrongCount} wrong</p>
+            <p style="color: #ffcc00; font-weight: bold; margin-top: 15px;">⚠️ You are offline! Result saved locally and will sync when internet is back.</p>
+            <a href="dashboard.php"><button class="confirm-btn" style="width: auto; padding: 10px 40px;">Exit</button></a>
+        `;
+            Effects.showVictory(Math.round(successPercent));
+        });
 }
 
 document.getElementById("exit-quiz").onclick = () => {

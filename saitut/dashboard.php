@@ -39,12 +39,24 @@ $quizzes_result = $stmt_q->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn-icons-png.flaticon.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn-icons-png.flaticon.com https://*.fbcdn.net;">
     <title>Quiz Master - Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="manifest" href="PWA/manifest.json">
+    <meta name="theme-color" content="#0d6efd">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
+
+    <button id="pwa-install-btn" onclick="promptInstall()" style="display:none;position:fixed;bottom:20px;right:20px;z-index:9999;padding:12px 20px;background:linear-gradient(135deg,#0d6efd,#6610f2);color:#fff;border:none;border-radius:25px;font-size:0.95rem;font-family:Montserrat,sans-serif;cursor:pointer;box-shadow:0 4px 20px rgba(13,110,253,0.5);align-items:center;gap:8px;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        📲 Install App
+    </button>
+
+    <div id="pwa-offline-toast" style="display:flex;align-items:center;gap:10px;position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;background:rgba(30,30,30,0.92);backdrop-filter:blur(10px);color:#fff;padding:12px 24px;border-radius:20px;font-family:Montserrat,sans-serif;font-size:0.9rem;box-shadow:0 4px 20px rgba(0,0,0,0.4);border:1px solid rgba(255,100,100,0.4);opacity:0;pointer-events:none;transition:opacity 0.4s;">
+        ⚠️ No internet connection
+    </div>
 
     <div class="sky-bg"></div>
     <div class="grass-floor">
@@ -319,5 +331,6 @@ $quizzes_result = $stmt_q->get_result();
         });
     </script>
     <script src="js/share.js"></script>
+    <script src="js/pwa.js"></script>
 </body>
 </html>

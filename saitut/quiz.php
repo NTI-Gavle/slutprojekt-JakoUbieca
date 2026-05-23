@@ -74,7 +74,7 @@ if ($quiz_id > 0) {
 </script>
 
 <script src="js/effects.js"></script>
-<script src="js/quiz.js"></script>
+<script src="js/quiz.js?v=3"></script>
 
 <script>
     const params = new URLSearchParams(window.location.search);
