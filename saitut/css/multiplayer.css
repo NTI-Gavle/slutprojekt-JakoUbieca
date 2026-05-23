@@ -1,0 +1,135 @@
+
+:root {
+    --glass: rgba(255, 255, 255, 0.12);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --accent: #ffcc00;
+    --blue: #00d2ff;
+}
+
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    overflow: hidden;
+}
+
+.sky-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, #00aaff 0%, #80dfff 50%, #fff 100%);
+    z-index: -3;
+}
+
+.lobby-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 10;
+    position: relative;
+}
+
+.header-nav {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-link {
+    text-decoration: none;
+    color: white;
+    background: var(--glass);
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-border);
+    transition: 0.3s;
+    backdrop-filter: blur(10px);
+}
+
+.back-link:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    width: 100%;
+    max-width: 1000px;
+    height: 75vh;
+}
+
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+
+h1, h2, h3 { margin: 0 0 15px 0; }
+.accent-text { color: var(--accent); }
+
+button {
+    border: none;
+    padding: 15px 25px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: inherit;
+    transition: 0.3s transform, 0.3s background;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button:active { transform: scale(0.95); }
+
+#btn-create-lobby { background: var(--blue); color: white; width: 100%; font-size: 1.1rem; }
+#btn-join-lobby { background: #76c900; color: white; width: 100%; }
+
+input, select {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 12px;
+    color: white;
+    margin-bottom: 15px;
+    outline: none;
+    font-size: 1rem;
+}
+
+select option { background: #333; color: white; }
+
+.player-list-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin: 15px 0;
+    background: rgba(0,0,0,0.1);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.confirm-btn {
+    background: var(--accent) !important;
+    color: #000 !important;
+    font-size: 1.2rem;
+}
+
+.confirm-btn:disabled {
+    background: #555 !important;
+    color: #888 !important;
+    cursor: not-allowed;
+}
+
+@media (max-width: 800px) {
+    .main-layout { grid-template-columns: 1fr; overflow-y: auto; height: auto; }
+    .lobby-wrapper { height: auto; padding: 40px 20px; }
+}
